@@ -1,0 +1,80 @@
+{
+  "first_checks": {
+    "base": "https://mediumturquoise-elephant-247172.hostingersite.com",
+    "checks": [
+      {
+        "check": "Private route requires authentication",
+        "passed": true
+      },
+      {
+        "check": "Supabase login and family dashboard",
+        "passed": true
+      },
+      {
+        "check": "Private response has no-store",
+        "passed": true,
+        "cache": "private, no-cache, no-store, max-age=0, must-revalidate"
+      },
+      {
+        "check": "/agenda",
+        "passed": true
+      },
+      {
+        "check": "/avisos",
+        "passed": true
+      },
+      {
+        "check": "/configuracion/reglas",
+        "passed": true
+      },
+      {
+        "check": "Server Action logout works behind Hostinger proxy",
+        "passed": true
+      },
+      {
+        "check": "No JavaScript runtime errors",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "verifiedAt": "2026-10-17T16:14:34.329Z"
+  },
+  "pwa_checks": {
+    "base": "https://mediumturquoise-elephant-247172.hostingersite.com",
+    "verifiedAt": "2026-10-17T16:18:47.976Z",
+    "passed": [
+      "Final SW v2 deployed",
+      "Login on final build",
+      "Only public resources cached",
+      "Offline reload with authorized family snapshot",
+      "Offline CSP preserved without network",
+      "Reconnect and authenticated reload",
+      "Server Action logout",
+      "No JavaScript runtime errors"
+    ]
+  },
+  "archive": {
+    "archive": "/tmp/COFI_20261017_111504.zip",
+    "files": 201,
+    "bytes": 342266,
+    "sha256": "f5b392d548e7bd733363d87cdf9374de3f363c65737252137f1750fcd587cac6"
+  },
+  "after_production_env_import": {
+    "base": "https://mediumturquoise-elephant-247172.hostingersite.com",
+    "build": "01a14aad-a7e9-71c1-b081-aab397defa72",
+    "verifiedAt": "2026-10-17T16:27:30.448Z",
+    "checks": [
+      "Private route requires authentication",
+      "Login and authorized family dashboard",
+      "Private responses not cached",
+      "/agenda",
+      "/avisos",
+      "/configuracion/reglas",
+      "SW v2 caches only public assets",
+      "Offline authorized snapshot with CSP",
+      "Reconnect and Server Action logout",
+      "No JavaScript runtime errors"
+    ],
+    "errors": []
+  }
+}

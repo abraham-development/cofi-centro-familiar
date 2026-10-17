@@ -1,0 +1,61 @@
+import { expect, test } from "@playwright/test";
+
+import { limaToday, login, watchConsole } from "./helpers";
+
+test("un adulto acepta una regla, genera preparativos y conserva los recordatorios al editar", async ({ page }) => {
+  const problems = watchConsole(page);
+  await login(page, "MAMA");
+  const unique = Date.now();
+  const name = `[E2E] Preparar visita ${unique}`;
+  const task = `[E2E] Preparar sala ${unique}`;
+  const title = `[E2E] Visita ${unique}`;
+  await page.goto("/configuracion/reglas");
+  await page.getByRole("button", { name: "Regla para visitas" }).click();
+  const dialog = page.getByRole("dialog");
+  await dialog.getByLabel("Nombre", { exact: true }).fill(name);
+  await dialog.getByLabel("Tarea de preparación (opcional)").fill(task);
+  await dialog.getByRole("button", { name: "Guardar", exact: true }).click();
+  await expect(dialog).toBeHidden();
+  await expect(page.getByText(name, { exact: true })).toBeVisible();
+  const editRule = page.getByRole("button", { name: `Editar ${name}`, exact: true });
+  await editRule.click();
+  await dialog.getByLabel("Minutos antes del evento").fill("90");
+  await dialog.getByRole("button", { name: "Guardar", exact: true }).click();
+  await expect(dialog).toBeHidden();
+  await editRule.click();
+  await expect(dialog.getByLabel("Minutos antes del evento")).toHaveValue("90");
+  await dialog.getByRole("button", { name: "Volver", exact: true }).click();
+  const day = limaToday();
+  await page.goto(`/agenda/nuevo?fecha=${day}`);
+  await page.getByLabel("¿Qué es?").fill(title);
+  await page.getByLabel("Empieza").fill("17:00");
+  await page.getByRole("button", { name, exact: true }).click();
+  await page.getByRole("button", { name: "30 min antes", exact: true }).click();
+  await page.getByRole("button", { name: "Guardar evento" }).click();
+  await expect(page).toHaveURL(/\/agenda$/);
+  await page.goto(`/agenda?desde=${day}&dias=1`);
+  await page.getByRole("link").filter({ hasText: title }).click();
+  await expect(page.getByRole("button", { name, exact: true })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByRole("button", { name: "30 min antes", exact: true })).toHaveAttribute("aria-pressed", "true");
+  const eventUrl = page.url();
+  await page.getByLabel("Empieza").fill("18:00");
+  await page.getByRole("button", { name: "Guardar cambios" }).click();
+  await expect(page).toHaveURL(/\/agenda$/);
+  await page.goto(eventUrl);
+  await expect(page.getByLabel("Empieza")).toHaveValue("18:00");
+  await expect(page.getByRole("button", { name, exact: true })).toHaveAttribute("aria-pressed", "true");
+  await page.goto("/casa");
+  await page.getByRole("link").filter({ hasText: "Mateo" }).first().click();
+  await expect(page.getByRole("region", { name: "Mis tareas de hoy" }).getByText(task, { exact: true })).toBeVisible();
+  expect(problems, problems.join("\n")).toEqual([]);
+});
+
+test("el historial de avisos conserva el respaldo visual sin configurar Push", async ({ page }) => {
+  const problems = watchConsole(page);
+  await login(page, "MAMA");
+  await page.goto("/avisos");
+  await expect(page.getByRole("heading", { name: "Historial" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Estado del sistema de avisos" })).toBeVisible();
+  await expect(page.getByText("Las notificaciones push aún no están configuradas", { exact: false })).toBeVisible();
+  expect(problems, problems.join("\n")).toEqual([]);
+});

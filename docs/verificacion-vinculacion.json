@@ -1,0 +1,32 @@
+{
+  "build": "01a14ae0-18ff-7374-8223-6fd497974ad4",
+  "base": "https://mediumturquoise-elephant-247172.hostingersite.com",
+  "verifiedAt": "2026-10-17T17:22:38.606Z",
+  "checks": [
+    "home: login dirigido en el mismo dispositivo",
+    "home: activada con sesión exclusiva de pantalla",
+    "home: salida adulta en la otra pestaña",
+    "home: acceso administrativo bloqueado y regreso persistente",
+    "child: login dirigido en el mismo dispositivo",
+    "child: activada con sesión exclusiva de pantalla",
+    "child: salida adulta en la otra pestaña",
+    "child: acceso administrativo bloqueado y regreso persistente",
+    "home: revocación en vivo",
+    "child: revocación en vivo"
+  ],
+  "errors": [],
+  "source": {
+    "archive": "/tmp/COFI_20261017_121846.zip",
+    "files": 203,
+    "bytes": 348363,
+    "sha256": "04846004af70a87618b911a3bd8b169ffd7047497fd32f4f40c79968866395cd"
+  },
+  "local_validation": {
+    "vitest": 45,
+    "pgtap": 180,
+    "selected_e2e": 15,
+    "compatible_pairing_cases": 3,
+    "seed_executed": false,
+    "migrations_added": false
+  }
+}

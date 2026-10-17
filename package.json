@@ -1,0 +1,60 @@
+{
+  "name": "cofi",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "node scripts/build.mjs",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "e2e": "node scripts/seed-dev.mjs && playwright test",
+    "db:test": "node scripts/db-test-remote.mjs",
+    "db:push": "supabase db push --linked",
+    "db:advisors": "supabase db advisors --linked --type all --level warn",
+    "types:gen": "supabase gen types typescript --linked --schema public > src/lib/supabase/database.types.ts",
+    "auth:configure": "node scripts/configure-auth.mjs",
+    "seed:dev": "node scripts/seed-dev.mjs",
+    "build:hostinger": "COFI_HOSTINGER_BUILD=1 node scripts/build.mjs"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.9.0",
+    "@hookform/resolvers": "5.9.2",
+    "@supabase/ssr": "0.12.7",
+    "@supabase/supabase-js": "2.118.0",
+    "class-variance-authority": "^0.7.1",
+    "cn": "^0.5.0",
+    "lucide-react": "1.59.0",
+    "next": "16.4.2",
+    "next-themes": "^0.4.6",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-hook-form": "7.90.0",
+    "server-only": "0.0.1",
+    "shadcn": "^4.22.0",
+    "sonner": "^2.0.8",
+    "temporal-polyfill": "1.0.6",
+    "tw-animate-css": "^1.4.0",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@next/swc-wasm-nodejs": "16.4.2",
+    "@playwright/test": "1.64.1",
+    "@tailwindcss/postcss": "4.3.3",
+    "@tailwindcss/turbopack": "^4",
+    "@types/node": "22.20.5",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.2",
+    "supabase": "^2.121.0",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "vitest": "5.0.5"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

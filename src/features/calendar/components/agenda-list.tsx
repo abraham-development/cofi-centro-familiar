@@ -1,0 +1,105 @@
+import { CalendarSearch, MapPin } from "lucide-react";
+import Link from "next/link";
+import { cn } from "cn";
+
+import type { AgendaEvent } from "../types";
+import { eventTimeLabel } from "./event-time-label";
+import { CategoryIcon } from "@/components/category-icon";
+import { EmptyState } from "@/components/empty-state";
+import { MemberStack } from "@/components/member-chip";
+import { addDays, daysBetween, formatLongDateWithYear, type HourFormat, relativeDayLabel } from "@/lib/time/zoned";
+
+export function AgendaList({
+  events,
+  from,
+  days,
+  today,
+  timeZone,
+  hourFormat,
+  homeColor,
+}: {
+  events: AgendaEvent[];
+  from: string;
+  days: number;
+  today: string;
+  timeZone: string;
+  hourFormat: HourFormat;
+  homeColor: string;
+}) {
+  const year = Number(today.slice(0, 4));
+  const groups = Array.from({ length: days }, (_, i) => addDays(from, i))
+    .map((date) => ({
+      date,
+      events: events
+        .filter((e) => e.localStartDate <= date && e.localEndDate >= date)
+        .sort((a, b) => {
+          if (a.isAllDay !== b.isAllDay) return a.isAllDay ? -1 : 1;
+          return (a.startsAt ?? "").localeCompare(b.startsAt ?? "");
+        }),
+    }))
+    .filter((g) => g.events.length > 0);
+
+  if (groups.length === 0) {
+    return (
+      <EmptyState
+        icon={CalendarSearch}
+        title="No hay eventos en este periodo"
+        description="Prueba otro rango o quita los filtros."
+      />
+    );
+  }
+
+  return (
+    <ol className="flex flex-col gap-6">
+      {groups.map((group) => {
+        const rel = relativeDayLabel(group.date, today);
+        const isRel = Math.abs(daysBetween(today, group.date)) <= 1;
+        return (
+          <li key={group.date} className="flex flex-col gap-2">
+            <h2 className={cn("text-xl font-bold", group.date === today && "text-primary")}>
+              {isRel ? `${rel} · ` : ""}
+              {formatLongDateWithYear(group.date, year)}
+            </h2>
+            <ul className="flex flex-col gap-2">
+              {group.events.map((event) => {
+                const accent = event.wholeFamily ? homeColor : (event.participants[0]?.color ?? "var(--border)");
+                return (
+                  <li key={`${group.date}-${event.id}`}>
+                    <Link
+                      href={`/agenda/${event.id}`}
+                      className={cn(
+                        "flex flex-col gap-2 rounded-2xl border border-l-[6px] bg-card p-4 transition-colors hover:bg-muted/50 sm:flex-row sm:items-center",
+                        event.status === "cancelled" && "opacity-60",
+                      )}
+                      style={{ borderLeftColor: accent }}
+                    >
+                      <span className="w-40 shrink-0 font-semibold tabular-nums text-muted-foreground">
+                        {eventTimeLabel(event, timeZone, hourFormat)}
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="flex items-center gap-2 text-lg font-bold">
+                          <CategoryIcon icon={event.category?.icon} className="size-5 shrink-0" />
+                          <span className={cn(event.status === "cancelled" && "line-through")}>{event.title}</span>
+                          {event.importance === "high" ? <span aria-label="importante">⭐</span> : null}
+                          {event.status === "cancelled" ? (
+                            <span className="rounded-full bg-muted px-2 text-sm font-semibold">Cancelado</span>
+                          ) : null}
+                        </span>
+                        {event.location ? (
+                          <span className="flex items-center gap-1 text-sm text-muted-foreground">
+                            <MapPin aria-hidden className="size-3.5" /> {event.location}
+                          </span>
+                        ) : null}
+                      </span>
+                      <MemberStack members={event.participants} wholeFamily={event.wholeFamily} homeColor={homeColor} />
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}

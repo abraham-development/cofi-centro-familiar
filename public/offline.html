@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#FAF8F3">
+  <title>Sin conexión · Centro Familiar</title>
+  <link rel="icon" href="/icons/icon-192.png">
+  <link rel="stylesheet" href="/offline.css">
+  <script src="/offline.js" defer></script>
+</head>
+<body>
+  <main>
+    <header><strong>COFI · Centro Familiar</strong><a id="retry" href="/">Volver a conectar</a></header>
+    <aside role="status"><h1>Sin conexión · Solo consulta</h1><p>Los datos pueden haber cambiado. Conéctate para confirmar y realizar cambios.</p><p id="synced"></p></aside>
+    <p id="empty">No hay una copia vigente para esta pantalla. Abre COFI con conexión para descargarla.</p>
+    <div id="snapshot" hidden>
+      <h2 id="family"></h2>
+      <p id="clock" aria-label="Hora local"></p><p id="countdown"></p>
+      <section><h2>Hoy</h2><ul id="today"></ul></section>
+      <section><h2>Radar de la semana</h2><ul id="week"></ul></section>
+      <section><h2>Responsabilidades y pendientes descargados</h2><ul id="tasks"></ul></section>
+    </div>
+  </main>
+</body>
+</html>
