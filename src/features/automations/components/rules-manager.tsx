@@ -74,10 +74,10 @@ export function RulesManager({
       ) : (
         <ul className="flex flex-col gap-2">
           {rules.map((r) => (
-            <li key={r.id} className="flex flex-wrap items-center gap-3 rounded-2xl border bg-card p-3">
+            <li key={r.id} className="flex flex-wrap items-center gap-3 rounded-xl border bg-card p-3">
               {r.kind === "visit_prep" ? <House aria-hidden className="size-6" /> : <GraduationCap aria-hidden className="size-6" />}
               <div className="min-w-0 flex-1">
-                <p className="flex items-center gap-2 text-lg font-semibold">
+                <p className="flex items-center gap-2 font-semibold">
                   {r.name}
                   {!r.enabled ? <Badge variant="secondary">Desactivada</Badge> : null}
                 </p>
@@ -157,6 +157,8 @@ function RuleDialog({
     : { ...PRESETS[preset ?? "visit_prep"], taskMemberIds: kids.map((k) => k.id) };
   const form = useForm<RuleFormValues>({ resolver: zodResolver(ruleFormSchema), defaultValues: initial });
   const { control, register, formState } = form;
+  // Lo recién guardado manda al reabrir mientras la página aún no trae la versión nueva.
+  const [lastSave, setLastSave] = useState<{ before: string; values: RuleFormValues } | null>(null);
 
   async function onSubmit(values: RuleFormValues) {
     const result = await saveRuleAction({ ruleId: rule?.id ?? null, values });
@@ -165,11 +167,18 @@ function RuleDialog({
       return;
     }
     toast.success(rule ? "Regla actualizada (se reaplicó a los próximos eventos)" : "Regla creada");
+    if (rule) setLastSave({ before: JSON.stringify(initial), values });
     setOpen(false);
   }
 
   return (
-    <Dialog open={open} onOpenChange={(next) => { if (next) form.reset(initial); setOpen(next); }}>
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        if (next) form.reset(lastSave && lastSave.before === JSON.stringify(initial) ? lastSave.values : initial);
+        setOpen(next);
+      }}
+    >
       <DialogTrigger render={trigger} />
       <DialogContent className="max-h-[90svh] overflow-y-auto sm:max-w-lg">
         <form onSubmit={form.handleSubmit(onSubmit)} noValidate className="flex flex-col gap-5">
@@ -230,7 +239,7 @@ function RuleDialog({
                             field.onChange(selected ? field.value.filter((id) => id !== k.id) : [...field.value, k.id])
                           }
                           className={cn(
-                            "flex min-h-11 items-center gap-2 rounded-full border-2 py-1 pr-4 pl-1 font-semibold",
+                            "flex min-h-10 items-center gap-2 rounded-lg border py-1 pr-3 pl-1 text-sm font-medium pointer-coarse:min-h-11",
                             !selected && "hover:bg-muted",
                           )}
                           style={selected ? { borderColor: k.color, backgroundColor: `${k.color}1f` } : undefined}

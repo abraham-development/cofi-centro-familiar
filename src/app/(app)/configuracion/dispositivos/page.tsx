@@ -31,7 +31,7 @@ export default function DevicesPage(props: PageProps<"/configuracion/dispositivo
         description="Configura este equipo o vincula otro mediante un código. Cada pantalla conserva solo los permisos que elijas."
         actions={<Button role="link" nativeButton={false} render={<Link href="/configuracion/dispositivos/esta-pantalla" />} className="h-auto min-h-11 whitespace-normal py-3 text-center">Configurar este dispositivo como pantalla</Button>}
       />
-      <Suspense fallback={<Skeleton className="h-96 rounded-3xl" />}>
+      <Suspense fallback={<Skeleton className="h-96 rounded-2xl" />}>
         <Devices searchParams={props.searchParams} />
       </Suspense>
     </div>

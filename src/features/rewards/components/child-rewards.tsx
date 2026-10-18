@@ -6,6 +6,8 @@ import { toast } from "sonner";
 
 import { decideRedemptionAction, requestRedemptionAction } from "../actions";
 import type { Redemption, Reward } from "../queries";
+import { Meter } from "@/components/meter";
+import { Panel } from "@/components/panel";
 import { Button } from "@/components/ui/button";
 import { useOnlineStatus } from "@/hooks/use-online-status";
 
@@ -58,29 +60,33 @@ export function ChildRewards({
   }
 
   return (
-    <section aria-labelledby="premios-titulo" className="flex flex-col gap-4 rounded-3xl border bg-card/60 p-5 shadow-sm sm:p-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 id="premios-titulo" className="text-3xl font-bold">
-          Mis puntos
-        </h2>
-        <p className="flex items-center gap-2 text-4xl font-extrabold tabular-nums">
-          <Coins aria-hidden className="size-9 text-warning" /> {balance}
+    <Panel
+      id="premios-titulo"
+      size="lg"
+      title="Mis puntos"
+      caption="Junta puntos con tus tareas y pide un premio"
+      actions={
+        <p className="flex items-center gap-2">
+          <Coins aria-hidden className="size-6 text-muted-foreground" />
+          <span className="figure text-4xl">{balance}</span>
         </p>
-      </div>
+      }
+    >
       {available.length === 0 ? (
         <p className="text-lg text-muted-foreground">Todavía no hay premios en el catálogo.</p>
       ) : (
-        <ul className="grid gap-3 sm:grid-cols-2">
+        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {available.map((r) => {
             const enough = balance >= r.cost;
             return (
-              <li key={r.id} className="flex flex-col gap-2 rounded-2xl border-2 bg-card p-4">
-                <p className="flex items-center gap-2 text-xl font-bold">
-                  <Gift aria-hidden className="size-6" /> {r.title}
+              <li key={r.id} className="flex flex-col gap-3 rounded-xl bg-muted/60 p-4">
+                <p className="flex items-center gap-2 text-xl font-semibold">
+                  <Gift aria-hidden className="size-5 text-muted-foreground" /> {r.title}
                 </p>
-                <p className="text-lg">
+                <p className="text-base text-muted-foreground">
                   {r.cost} puntos{r.conditions ? ` · ${r.conditions}` : ""}
                 </p>
+                <Meter value={balance} max={r.cost} size="md" tone={enough ? "brand" : "warning"} label={`Puntos para «${r.title}»`} />
                 {enough ? (
                   <Button size="lg" onClick={() => request(r)} disabled={pending || !online}>
                     Pedir este premio
@@ -95,10 +101,10 @@ export function ChildRewards({
       )}
       {redemptions.length > 0 ? (
         <>
-          <h3 className="text-xl font-bold">Mis pedidos</h3>
+          <h3 className="text-lg font-semibold text-muted-foreground">Mis pedidos</h3>
           <ul className="flex flex-col gap-2">
             {redemptions.slice(0, 5).map((r) => (
-              <li key={r.id} className="flex flex-wrap items-center gap-2 rounded-xl border p-3 text-lg">
+              <li key={r.id} className="flex flex-wrap items-center gap-2 rounded-xl border bg-card p-3 text-lg">
                 {r.status === "requested" ? <Hourglass aria-hidden className="size-5" /> : <Gift aria-hidden className="size-5" />}
                 <span className="font-semibold">{r.rewardTitle}</span>
                 <span className="text-muted-foreground">· {STATUS_LABEL[r.status]}</span>
@@ -112,6 +118,6 @@ export function ChildRewards({
           </ul>
         </>
       ) : null}
-    </section>
+    </Panel>
   );
 }

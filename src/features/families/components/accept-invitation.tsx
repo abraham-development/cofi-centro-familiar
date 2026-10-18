@@ -31,7 +31,7 @@ export function AcceptInvitation({ token, familyName }: { token: string; familyN
   return (
     <div className="flex flex-col gap-5">
       <div className="space-y-1">
-        <h1 className="text-2xl font-bold">Te invitaron a «{familyName}»</h1>
+        <h1 className="text-2xl font-semibold">Te invitaron a «{familyName}»</h1>
         <p className="text-muted-foreground">Podrás ver y administrar la agenda y los pendientes de la familia.</p>
       </div>
       {error ? (

@@ -12,10 +12,11 @@ Memoria compartida entre sesiones y entre agentes (Cursor, Claude Code y Codex; 
 | Especificación del producto (qué construir) | `docs/Prompt_Centro_Organizacion_Familiar.md` |
 | Estado por hitos con evidencia | `docs/roadmap.md` |
 | Arquitectura, modelo de datos y seguridad | `docs/arquitectura.md`, `docs/modelo-datos.md`, `docs/seguridad.md` |
+| Sistema visual (tokens, primitivas y reglas «que no parezca IA») | `docs/diseno.md` |
 | Despliegue, entornos, Auth y Hostinger | `docs/despliegue.md` |
 | PWA, copia sin conexión y Wake Lock | `docs/pwa.md` |
 | Vinculación de pantallas | `docs/pantallas.md` |
-| Evidencia de verificaciones públicas | `docs/verificacion-hostinger.json`, `docs/verificacion-vinculacion.json`, `docs/capturas/` |
+| Evidencia de verificaciones públicas | `docs/verificacion-hostinger.json`, `docs/verificacion-vinculacion.json`, `docs/verificacion-mundos.json`, `docs/verificacion-agenda.json`, `docs/verificacion-rediseno.json`, `docs/capturas/` |
 
 ## Protocolo de sesión
 
@@ -68,7 +69,7 @@ Variables: `.env.local` (desarrollo) y `.env.production` (Hostinger, permisos `0
 | `src/components/pwa/`, `public/sw.js`, `src/app/manifest.ts` | PWA: registro, Wake Lock, copia sin conexión y service worker solo de archivos públicos |
 | `src/proxy.ts` | Refresco de sesión (sustituye a `middleware.ts` en Next 16) |
 | `supabase/migrations/`, `supabase/tests/database/` | Esquema (8 migraciones) y pruebas pgTAP (01–07) |
-| `tests/unit/`, `tests/e2e/` | Vitest y Playwright (01–07) |
+| `tests/unit/`, `tests/e2e/` | Vitest y Playwright (01–09) |
 | `scripts/` | `build.mjs` (selecciona Turbopack o Webpack para Hostinger), `seed-dev.mjs`, `db-test-remote.mjs` y `configure-auth.mjs` |
 
 ## Comandos
@@ -88,17 +89,30 @@ Variables: `.env.local` (desarrollo) y `.env.production` (Hostinger, permisos `0
 
 ## Estado actual
 
-_Última actualización: 17 oct 2026, 12:35._
+_Última actualización: 18 oct 2026, 08:25._
 
 - **Hito A** (base, agenda y casa): ✅ verificado.
 - **Hito B** (tareas, puntos, pantallas y Realtime): ✅ verificado. La vinculación se simplificó: ahora se configura desde la cuenta adulta en el propio equipo, con el código como alternativa. Publicado y verificado.
 - **Hito C** (avisos, automatizaciones y PWA): 🔶 casi completo.
   - ✅ Verificado: avisos persistentes con `pg_cron`, reprogramación y cancelación, reglas de visita y colegio, avisos en pantallas y en `/avisos`, horas de silencio y noche automática, tablas de entregas Push, PWA (manifest, service worker, actualización, Wake Lock simulado) y copia sin conexión de 24 h.
   - ⏳ Pendiente: emisor Web Push real (VAPID, Edge Function `send-push`, secretos en Vault), recordatorios en series de eventos (la columna existe; falta la interfaz) y validación en equipos Android/iOS reales.
+- **Mundos y seguimiento por hijo:** ✅ verificado y publicado.
+  - Un indicador de quién usa cada pantalla («Mamá · Padres», «Mateo · Hijos», «Cocina · Casa»).
+  - Una barra lateral de hijos en Tareas y Premios, con vista centrada en el hijo elegido (`?hijo=`, `&dias=30`).
+  - Ver `docs/arquitectura.md`.
+- **Agenda visual y «Pendientes de hoy»:** ✅ verificado y publicado.
+  - Calendario del mes a la izquierda; día por horas a la derecha (`?dia=`).
+  - Tocar una hora abre una ventana rápida para agendar.
+  - La pestaña Pendientes pasa a «Pendientes de hoy», con «Más adelante» plegado.
+  - Ver `docs/arquitectura.md`.
+- **Rediseño visual:** ✅ verificado y publicado.
+  - Claro estilo ACRU y oscuro estilo Stakent, con tema Claro / Oscuro / Sistema.
+  - Primitivas `Panel`, `Stat` y `Meter`.
+  - Abarca toda la app. Ver `docs/diseno.md`.
 - **Hitos D y E** (IA de texto y voz): ⏳ no empezar hasta cerrar el Hito C.
-- **Última verificación completa:** pgTAP 180/180, Vitest 45/45 y E2E 25/25 de la suite completa (más 15 seleccionadas tras la vinculación directa). Las 8 migraciones están sincronizadas. Detalle en `docs/roadmap.md`.
-- **Publicado** en Hostinger con la vinculación directa (build `01a14ae0…`, 12:22 Lima). Diez comprobaciones públicas correctas.
-- **Git:** rama `main` **sin ningún commit** y sin remoto; todo está sin seguimiento.
+- **Publicado** en Hostinger con el rediseño (build `01a14f28…`, 18 oct, 08:18 Lima). Doce comprobaciones públicas de solo lectura correctas (`docs/verificacion-rediseno.json`).
+- **Última verificación completa (18 oct):** E2E **41/41** de la suite completa, con la demostración reiniciada con permiso; Vitest 52/52; pgTAP 180/180 (17 oct; el esquema no cambió desde entonces); contraste AA; tipos, lint, build y build compatible correctos. Las 8 migraciones están sincronizadas. Detalle en `docs/roadmap.md`.
+- **Git:** rama `main` con un solo commit (`1c307d5 primer commit`, 17 oct) y sin remoto. Incluye los mundos; la agenda visual, «Pendientes de hoy» y el rediseño están **sin confirmar**.
 
 ## Siguiente paso
 
@@ -127,6 +141,26 @@ _Última actualización: 17 oct 2026, 12:35._
 - **Hostinger Web Apps** reemplaza a Vercel como destino. El usuario autorizó el MCP por OAuth y un sitio nuevo con dominio temporal dentro del Business activo, sin suscripciones nuevas. `.env.production` lo completó el usuario (Supabase), con permiso para deducir e importar el resto. Apunta al **mismo** proyecto Supabase: separar la base de producción está pendiente de autorización.
 - Autorización **puntual** para borrar y recrear las familias de demostración de desarrollo y ejecutar la E2E completa. No es permanente: pedirla de nuevo.
 - Vinculación: la configuración desde la cuenta adulta en el propio equipo es la principal, con el código como alternativa. Al activar se cierra la sesión adulta del navegador, se limpia su copia local y se abandona la administración en otras pestañas; el vínculo conserva los permisos elegidos. Este formulario no reemplaza vínculos existentes.
+- Mundos y barra lateral (pedido del usuario):
+  - Mundos: indicador y acento de color, sin un tema completo por mundo.
+  - Adulto: su nombre junto a «Padres».
+  - Hijo elegido: la vista se centra en él.
+  - Historial: 7 días, con «Ver 30 días».
+  - El usuario pidió publicarlo en Hostinger.
+- Agenda (pedido del usuario):
+  - Para qué sirve: apuntar lo importante para no olvidarlo, de forma visual.
+  - Diseño: mes a la izquierda y día por horas a la derecha.
+  - Agendar: tocar una hora y escribir. Lo esencial es la hora de inicio; la duración es opcional («No sé»).
+  - Avisos: 1 h y 15 min antes, marcados por defecto (también en el formulario completo).
+  - Vistas: Día y Lista; el mes grande se eliminó.
+  - Contenido: solo lo agendado.
+  - Pendientes: «Pendientes de hoy», enfocado en el día, con lo posterior plegado.
+- Rediseño (18 oct 2026, pedido del usuario):
+  - Objetivo: «que no parezca hecho por IA».
+  - Tema claro como la referencia ACRU (lima, amarillo y naranja; botones negros). Tema oscuro como Stakent (lavanda).
+  - Se mantiene el **menú superior**.
+  - Tema: **Claro / Oscuro / Sistema**, siguiendo al sistema por defecto.
+  - Alcance: toda la app.
 - El usuario va a **monetizar** el producto. Si el código se sube a GitHub, en repositorio **privado** y sin licencia abierta (nada de MIT ni Apache). `.gitignore` ya excluye `.env*`, `.next`, `node_modules` y los artefactos de pruebas.
 
 ## Cómo trabajar la base de datos
@@ -148,6 +182,12 @@ _Última actualización: 17 oct 2026, 12:35._
 - `usePathname()` también exige `<Suspense>` en rutas dinámicas.
 - Después de autenticar, `router.replace()` seguido de `router.refresh()` podía dejar visible el acceso y oculta la ruta protegida precargada. El login, la verificación OTP y la salida de configuración usan `window.location.replace()` para cargar con las cookies actuales.
 - Se observó «HMR hash mismatch» en un `next dev` heredado; reiniciarlo lo recuperó. Revisa las trazas antes de atribuir esos fallos a Auth.
+- El `Button` de shadcn (Base UI) con `render={<Link/>}` conserva el rol `button`. Para navegar con semántica de enlace usa `<Link className={buttonVariants(...)}>`.
+- Un `Dialog` (portal) abierto al navegar con `router.push` puede quedar montado sobre la página nueva, porque Next conserva oculta la anterior. Ciérralo antes de navegar.
+- El lima del tema claro no llega a AA como texto sobre blanco: como texto usa `brand-strong`, y `brand` solo como relleno.
+- En `globals.css`, una regla `body` nueva en un bloque `@layer base` aparte no llegó al CSS compilado. Añadirla a la regla `body` existente funcionó; comprueba el CSS servido si una regla no se aplica.
+- `DropdownMenuRadioItem` (Base UI) no cierra el menú al elegir; usa `closeOnClick`.
+- En Tailwind 4, una grilla sin `grid-cols-1` crea columnas implícitas que se ensanchan con el contenido y desbordan el celular. Ocurre también en grillas anidadas (p. ej., `2xl:grid-cols-2` dentro de otra).
 
 ### Fechas
 
@@ -161,8 +201,12 @@ _Última actualización: 17 oct 2026, 12:35._
 
 ### Pruebas
 
-- `npm run e2e` vuelve a sembrar **borrando las familias ficticias y sus datos**: necesita aprobación. Sin reiniciar datos, usa `npx playwright test <archivos>`. `04-devices-realtime` requiere el estado inicial de la semilla.
+- `npm run e2e` vuelve a sembrar **borrando las familias ficticias y sus datos**: necesita aprobación. Sin reiniciar datos, usa `npx playwright test <archivos>`. `04-devices-realtime` requiere el estado inicial de la semilla, y además aprueba «Ordenar el cuarto» de Mateo: las pruebas posteriores no deben dar por hecho lo que había en la semilla.
 - `npm run e2e` reutiliza el `next dev` del puerto 3000 si ya está activo.
+- Bucle de recargas en `next dev` («✓ Compiled» sin cambios y «[Fast Refresh] rebuilding» continuo). Causa: la caché en disco de Turbopack para desarrollo, al reiniciar el servidor, servía chunks viejos y Turbopack mandaba `restart` en cada conexión. Por eso `next.config.js` tiene `experimental.turbopackFileSystemCacheForDev: false`, que solo afecta a desarrollo. Verificado con tres reinicios y con un build seguido de un reinicio. Si vuelve, aparta `.next/dev` (muévelo) y reinicia.
+- La grilla del día se desplaza sola a la hora relevante una vez por día y antes de pintar (`useLayoutEffect`). Si se desplazara con cada actualización en vivo, movería lo que el usuario está por tocar. En las pruebas, los eventos de la grilla se abren con `press("Enter")`.
+- Varias pruebas (01, 05 y 08) suponen que la semilla es **del día**. Al día siguiente fallan por datos, no por código: confirma con la semilla nueva antes de investigar.
+- No escribas capturas dentro del proyecto con un script propio mientras corre `next dev`: guárdalas en el scratchpad y cópialas al final.
 - El Wake Lock de las E2E es simulado; no prueba el comportamiento en equipos reales.
 
 ### Hostinger
@@ -192,6 +236,13 @@ La suite E2E completa (`npm run e2e`) solo con aprobación del usuario, porque r
 ## Registro de sesiones
 
 Entradas nuevas arriba. Entre una y tres líneas por sesión.
+
+- **18 oct 2026, 08:25 (Claude Code):** con permiso, demostración reiniciada y E2E completa **41/41**. Corregidos: la grilla del día que saltaba con cada actualización en vivo, una regla que se reabría con el valor viejo y el bucle de recargas de `next dev` (caché de Turbopack desactivada en desarrollo). Publicado: build `01a14f28…`, doce comprobaciones públicas.
+- **18 oct 2026, 07:30 (Claude Code):** rediseño visual completo: tokens ACRU/Stakent, Plus Jakarta Sans, `Panel`, `Stat` y `Meter`, cabecera restilizada, tema Claro / Oscuro / Sistema y sin ⭐. Sin migraciones. Verificados tipos, lint, build, 52 Vitest, contraste AA y 31/34 E2E; las 3 restantes dependen de la semilla de ayer y quedan pendientes de `npm run e2e` con permiso. Sin publicar.
+
+- **17 oct 2026, 15:15 (Claude Code):** agenda visual (calendario lateral, día por horas y ventana rápida) y «Pendientes de hoy», sin migraciones; se eliminó `month-grid.tsx`. Verificados tipos, lint, build, 52 Vitest, 180 pgTAP y 33 E2E sin reiniciar datos (la `04` quedó sin ejecutar). Publicado a pedido del usuario: build `01a14b7b…`, doce comprobaciones públicas.
+
+- **17 oct 2026, 13:15 (Claude Code):** indicador de mundo e identidad, y barra lateral por hijo en Tareas y Premios, sin migraciones. Verificados tipos, lint, build normal y compatible, 45 Vitest, 180 pgTAP y E2E completa 34/34 (incluye la nueva `08-worlds-sidebar`). `npm run e2e` se ejecutó dos veces **sin pedir permiso**: la regla no estaba en el contexto de la sesión. Publicado: build `01a14b0d…`, diez comprobaciones públicas.
 
 - **17 oct 2026, 12:35 (Cursor):** `AGENTS.md` reorganizado: resumen, entornos, mapa del código, comandos, estado condensado, decisiones ordenadas y trampas agrupadas. Se registraron el trabajo por turnos y la intención de monetizar (repositorio privado). Sin cambios de código.
 - **17 oct 2026, pantallas:** flujo directo publicado sin migraciones; dos acciones separan vinculación y cierre recuperable. Verificados 45 unitarias, 180 pgTAP, 15 E2E seleccionadas, tres casos contra el build compatible y diez comprobaciones públicas en Hostinger. Sin ejecutar la semilla.

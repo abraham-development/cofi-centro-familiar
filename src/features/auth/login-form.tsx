@@ -68,7 +68,7 @@ export function LoginForm() {
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} noValidate className="flex flex-col gap-6">
       <div className="space-y-1">
-        <h1 className="text-2xl font-bold">Iniciar sesión</h1>
+        <h1 className="text-2xl font-semibold">Iniciar sesión</h1>
         <p className="text-muted-foreground">Acceso para adultos de la familia.</p>
       </div>
       {error ? (

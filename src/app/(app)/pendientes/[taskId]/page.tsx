@@ -52,7 +52,7 @@ export default function TaskPage(props: PageProps<"/pendientes/[taskId]">) {
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <PageHeader title="Editar pendiente" />
-      <Suspense fallback={<Skeleton className="h-[32rem] rounded-3xl" />}>
+      <Suspense fallback={<Skeleton className="h-[32rem] rounded-2xl" />}>
         <EditTask {...props} />
       </Suspense>
     </div>

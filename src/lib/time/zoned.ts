@@ -154,6 +154,13 @@ export function formatLocalTime(hhmm: string, hourFormat: HourFormat): string {
   return `${h12}:${pad2(m)} ${period}`;
 }
 
+/** Etiqueta compacta de una hora en punto: "5 PM" o "17:00". */
+export function formatHourShort(hour: number, hourFormat: HourFormat): string {
+  if (hourFormat === "24h") return `${pad2(hour)}:00`;
+  const h12 = hour % 12 === 0 ? 12 : hour % 12;
+  return `${h12} ${hour < 12 ? "AM" : "PM"}`;
+}
+
 /** "Jueves 22 de octubre". */
 export function formatLongDate(date: IsoDate | Temporal.PlainDate): string {
   const d = typeof date === "string" ? Temporal.PlainDate.from(date) : date;

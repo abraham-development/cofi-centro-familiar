@@ -1,12 +1,15 @@
+import { Bell } from "lucide-react";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
+import { cn } from "cn";
 
 import { AppNav, AppNavLinks } from "@/components/app-shell/app-nav";
 import { IdentityBadge } from "@/components/app-shell/identity-badge";
 import { KioskAdultGuard } from "@/components/app-shell/kiosk-adult-guard";
 import { UserMenu } from "@/components/app-shell/user-menu";
 import { Brand } from "@/components/brand";
+import { buttonVariants } from "@/components/ui/button";
 import { SnapshotScope } from "@/components/pwa/snapshot-scope";
 import { LiveSync } from "@/components/live/live-sync";
 import { getAdultContext } from "@/lib/auth/session";
@@ -27,6 +30,9 @@ async function UserMenuSlot() {
   return (
     <div className="flex items-center gap-1.5 sm:gap-2">
       <SnapshotScope identity={ctx.user.id} familyId={ctx.family.id} />
+      <Link href="/avisos" aria-label="Avisos" className={cn(buttonVariants({ variant: "outline", size: "icon" }), "hidden sm:inline-flex")}>
+        <Bell aria-hidden />
+      </Link>
       {me ? (
         <span className="hidden sm:inline-flex">
           <IdentityBadge world="parents" name={me.displayName} avatar={me} detail={roleLabel} />
@@ -64,7 +70,7 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
         <KioskSlot />
       </Suspense>
       <header className="sticky top-0 z-30 border-b bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/75">
-        <div className="mx-auto flex w-full max-w-[110rem] items-center justify-between gap-1 px-3 py-2 sm:gap-2 sm:px-6">
+        <div className="mx-auto flex w-full max-w-[110rem] items-center justify-between gap-2 px-3 py-2.5 sm:gap-3 sm:px-6">
           <Link href="/casa" className="hidden rounded-xl md:block" aria-label="Centro Familiar, ir a casa">
             <Brand />
           </Link>

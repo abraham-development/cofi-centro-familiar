@@ -46,7 +46,7 @@ async function Onboarding({ searchParams }: { searchParams: PageProps<"/onboardi
       <>
         <Steps current={1} />
         <div className="space-y-1">
-          <h1 className="text-3xl font-bold">Crea el espacio de tu familia</h1>
+          <h1 className="text-2xl font-semibold sm:text-[1.75rem]">Crea el espacio de tu familia</h1>
           <p className="text-lg text-muted-foreground">Es privado: solo lo verán los adultos y las pantallas que autorices.</p>
         </div>
         <CreateFamilyForm />
@@ -60,7 +60,7 @@ async function Onboarding({ searchParams }: { searchParams: PageProps<"/onboardi
       <>
         <Steps current={2} />
         <div className="space-y-1">
-          <h1 className="text-3xl font-bold">¿Quiénes viven en casa?</h1>
+          <h1 className="text-2xl font-semibold sm:text-[1.75rem]">¿Quiénes viven en casa?</h1>
           <p className="text-lg text-muted-foreground">
             Agrega a los demás adultos e hijos. Los hijos no necesitan correo ni contraseña.
           </p>
@@ -85,7 +85,7 @@ export default function OnboardingPage(props: PageProps<"/onboarding">) {
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-4 py-8">
       <Brand />
-      <div className="flex flex-col gap-6 rounded-3xl border bg-card p-5 shadow-sm sm:p-8">
+      <div className="flex flex-col gap-6 rounded-2xl border bg-card p-5 sm:p-8">
         <Suspense fallback={<Skeleton className="h-96 rounded-2xl" />}>
           <Onboarding searchParams={props.searchParams} />
         </Suspense>

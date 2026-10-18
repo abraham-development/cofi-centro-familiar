@@ -77,7 +77,7 @@ export default function SplitSeriesPage(props: PageProps<"/agenda/serie/[seriesI
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <PageHeader title="Cambiar esta y las siguientes" />
-      <Suspense fallback={<Skeleton className="h-[40rem] rounded-3xl" />}>
+      <Suspense fallback={<Skeleton className="h-[40rem] rounded-2xl" />}>
         <SplitSeries {...props} />
       </Suspense>
     </div>

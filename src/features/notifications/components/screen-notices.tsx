@@ -1,6 +1,6 @@
 "use client";
 
-import { BellRing, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import { useTransition } from "react";
 import { toast } from "sonner";
 import { cn } from "cn";
@@ -8,6 +8,7 @@ import { cn } from "cn";
 import { acknowledgeNotificationAction } from "../actions";
 import type { FamilyNotification } from "../queries";
 import { useClock } from "@/components/clock/clock-provider";
+import { Panel } from "@/components/panel";
 import { Button } from "@/components/ui/button";
 import { epochFromIso, formatInstantTime } from "@/lib/time/zoned";
 
@@ -37,20 +38,16 @@ export function ScreenNotices({
   if (active.length === 0) return null;
 
   return (
-    <section aria-labelledby="avisos-activos" className="flex flex-col gap-3 rounded-3xl border-2 border-highlight bg-card p-5 shadow-sm sm:p-6">
-      <h2 id="avisos-activos" className="flex items-center gap-2 text-2xl font-bold">
-        <BellRing aria-hidden className="size-6" /> {title}
-      </h2>
+    <Panel id="avisos-activos" title={title} caption="Toca «Entendido» cuando lo hayas visto" className="border-l-4 border-l-warning">
       <ul className="flex flex-col gap-3" aria-live="polite">
         {active.slice(0, 6).map((n) => (
-          <li key={n.id} className={cn("flex flex-col gap-2 rounded-2xl p-4 sm:flex-row sm:items-center", n.importance === "high" ? "bg-highlight/40" : "bg-muted")}>
+          <li key={n.id} className={cn("flex flex-col gap-3 rounded-xl p-4 sm:flex-row sm:items-center", n.importance === "high" ? "bg-warning/10" : "bg-muted/60")}>
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-semibold text-muted-foreground">{formatInstantTime(n.createdAt, timeZone, hourFormat)}</p>
-              <p className="text-xl font-bold">{n.title}</p>
-              {n.body ? <p className="text-lg">{n.body}</p> : null}
+              <p className="text-xs font-medium text-muted-foreground tabular-nums">{formatInstantTime(n.createdAt, timeZone, hourFormat)}</p>
+              <p className="mt-0.5 text-lg font-semibold">{n.title}</p>
+              {n.body ? <p className="text-base text-muted-foreground">{n.body}</p> : null}
             </div>
             <Button
-              size="lg"
               variant="outline"
               disabled={pending}
               onClick={() =>
@@ -65,6 +62,6 @@ export function ScreenNotices({
           </li>
         ))}
       </ul>
-    </section>
+    </Panel>
   );
 }

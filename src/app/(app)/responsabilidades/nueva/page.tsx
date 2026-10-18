@@ -45,7 +45,7 @@ export default function NewTemplatePage() {
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <PageHeader title="Nueva responsabilidad o hábito" />
-      <Suspense fallback={<Skeleton className="h-[36rem] rounded-3xl" />}>
+      <Suspense fallback={<Skeleton className="h-[36rem] rounded-2xl" />}>
         <NewTemplate />
       </Suspense>
     </div>

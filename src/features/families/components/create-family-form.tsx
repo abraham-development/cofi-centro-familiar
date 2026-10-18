@@ -65,10 +65,10 @@ export function CreateFamilyForm() {
       ) : null}
       <FieldGroup>
         <Field data-invalid={!!errors.name}>
-          <FieldLabel htmlFor="name" className="text-lg">
+          <FieldLabel htmlFor="name" className="text-[0.95rem]">
             Nombre de la familia
           </FieldLabel>
-          <Input id="name" className="h-14 text-xl" placeholder="Ej.: Familia García" {...register("name")} />
+          <Input id="name" className="h-12 text-lg" placeholder="Ej.: Familia García" {...register("name")} />
           <FieldError errors={[errors.name]} />
         </Field>
         <Field data-invalid={!!errors.ownerDisplayName}>

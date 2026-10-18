@@ -28,7 +28,7 @@ export function ChildTaskHistory({ tasks, mode }: { tasks: ChildTask[]; mode: "t
 
   if (relevant.length === 0) {
     return (
-      <p className="rounded-2xl border border-dashed px-4 py-6 text-center text-muted-foreground">
+      <p className="rounded-xl border border-dashed px-4 py-6 text-center text-sm text-muted-foreground">
         {mode === "today" ? "Hoy no tiene tareas ni hábitos." : "No hay registros en este periodo."}
       </p>
     );
@@ -46,18 +46,28 @@ export function ChildTaskHistory({ tasks, mode }: { tasks: ChildTask[]; mode: "t
   return (
     <div className="flex flex-col gap-4">
       {summary ? (
-        <ul className="flex flex-wrap gap-2 text-sm font-semibold" aria-label="Resumen del periodo">
-          <li className="rounded-full bg-success/15 px-3 py-1">{summary.onTime} a tiempo</li>
-          <li className="rounded-full bg-success/10 px-3 py-1">{summary.late} tarde</li>
-          <li className="rounded-full bg-warning/20 px-3 py-1">{summary.overdue} vencidas</li>
-          <li className="rounded-full bg-ring/15 px-3 py-1">{summary.inReview} en revisión</li>
-          {summary.exempt ? <li className="rounded-full bg-muted px-3 py-1">{summary.exempt} exentas</li> : null}
+        <ul className="grid grid-cols-2 gap-2 sm:grid-cols-4" aria-label="Resumen del periodo">
+          {[
+            { value: summary.onTime, label: "a tiempo", dot: "bg-success" },
+            { value: summary.late, label: "tarde", dot: "bg-brand" },
+            { value: summary.overdue, label: "vencidas", dot: "bg-warning" },
+            { value: summary.inReview, label: "en revisión", dot: "bg-muted-foreground" },
+            ...(summary.exempt ? [{ value: summary.exempt, label: "exentas", dot: "bg-muted-foreground/50" }] : []),
+          ].map((item) => (
+            <li key={item.label} className="rounded-xl bg-muted/60 px-3 py-2.5">
+              <p className="figure text-xl">{item.value}</p>
+              <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+                <span aria-hidden className={cn("size-1.5 rounded-full", item.dot)} />
+                {item.label}
+              </p>
+            </li>
+          ))}
         </ul>
       ) : null}
       {days.map((day) => (
         <section key={day} aria-label={formatLongDate(day)} className="flex flex-col gap-2">
           {mode === "history" ? (
-            <h3 className="font-bold">
+            <h3 className="text-sm font-semibold text-muted-foreground">
               {relativeDayLabel(day, today) === "Ayer" ? `Ayer · ${formatLongDate(day)}` : formatLongDate(day)}
             </h3>
           ) : null}
@@ -72,17 +82,17 @@ export function ChildTaskHistory({ tasks, mode }: { tasks: ChildTask[]; mode: "t
                   <li
                     key={task.id}
                     className={cn(
-                      "flex flex-wrap items-center gap-3 rounded-2xl border bg-card px-3 py-2",
-                      state.key === "overdue" && "border-warning",
+                      "flex flex-wrap items-center gap-3 rounded-xl border bg-card px-3 py-2.5",
+                      state.key === "overdue" && "border-warning/50 bg-warning/5",
                     )}
                   >
-                    <Icon aria-hidden className="size-5 shrink-0 text-muted-foreground" />
+                    <Icon aria-hidden className="size-4 shrink-0 text-muted-foreground" />
                     <div className="min-w-0 flex-1">
                       <p className="font-semibold">
                         {task.title}
                         <span className="sr-only"> ({task.kind === "habit" ? "hábito" : "responsabilidad"})</span>
                       </p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-xs text-muted-foreground">
                         {task.dueTime ? `Límite ${formatLocalTime(task.dueTime, hourFormat)}` : "Durante el día"}
                         {task.submittedAt ? ` · entregó ${submittedLabel(task.submittedAt, day)}` : ""}
                         {task.points ? ` · ${task.points} pts` : ""}

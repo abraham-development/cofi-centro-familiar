@@ -101,7 +101,7 @@ export function TemplateForm({
                     aria-checked={field.value === opt.value}
                     onClick={() => field.onChange(opt.value)}
                     className={cn(
-                      "flex flex-col items-start rounded-xl border-2 px-4 py-2 text-left",
+                      "flex flex-col items-start rounded-lg border px-4 py-2 text-left",
                       field.value === opt.value ? "border-primary bg-primary/5" : "hover:bg-muted",
                     )}
                   >
@@ -115,12 +115,12 @@ export function TemplateForm({
         />
 
         <Field data-invalid={!!errors.title}>
-          <FieldLabel htmlFor="title" className="text-lg">
+          <FieldLabel htmlFor="title" className="text-[0.95rem]">
             ¿Qué hay que hacer?
           </FieldLabel>
           <Input
             id="title"
-            className="h-14 text-xl"
+            className="h-12 text-lg"
             maxLength={120}
             placeholder={kind === "habit" ? "Cepillarse los dientes" : "Preparar la mochila"}
             {...register("title")}
@@ -147,7 +147,7 @@ export function TemplateForm({
                         field.onChange(selected ? field.value.filter((id) => id !== k.id) : [...field.value, k.id])
                       }
                       className={cn(
-                        "flex min-h-11 items-center gap-2 rounded-full border-2 py-1 pr-4 pl-1 font-semibold",
+                        "flex min-h-10 items-center gap-2 rounded-lg border py-1 pr-3 pl-1 text-sm font-medium pointer-coarse:min-h-11",
                         !selected && "hover:bg-muted",
                       )}
                       style={selected ? { borderColor: k.color, backgroundColor: `${k.color}1f` } : undefined}
@@ -178,7 +178,7 @@ export function TemplateForm({
                     aria-checked={field.value === opt.value}
                     onClick={() => field.onChange(opt.value)}
                     className={cn(
-                      "min-h-11 rounded-xl border-2 px-3 font-semibold",
+                      "min-h-10 rounded-lg border px-3 text-sm font-medium pointer-coarse:min-h-11",
                       field.value === opt.value ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted",
                     )}
                   >
@@ -212,7 +212,7 @@ export function TemplateForm({
                           )
                         }
                         className={cn(
-                          "size-12 rounded-xl border-2 font-semibold capitalize",
+                          "size-10 rounded-lg border text-sm font-medium capitalize pointer-coarse:size-11",
                           selected ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted",
                         )}
                       >

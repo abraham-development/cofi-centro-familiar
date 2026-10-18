@@ -99,7 +99,7 @@ export function PairingScreen({ revoked, isAdult }: { revoked: boolean; isAdult:
   return (
     <main className="flex min-h-svh flex-1 flex-col items-center justify-center gap-8 px-4 py-10 text-center">
       <Brand size="lg" />
-      <div className="flex w-full max-w-2xl flex-col items-center gap-6 rounded-3xl border bg-card p-8 shadow-sm">
+      <div className="flex w-full max-w-2xl flex-col items-center gap-6 rounded-2xl border bg-card p-8">
         <MonitorSmartphone aria-hidden className="size-14 text-muted-foreground" />
         <h1 className="text-3xl font-bold">Vincular esta pantalla</h1>
         {revoked ? (

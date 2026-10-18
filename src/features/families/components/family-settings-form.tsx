@@ -85,7 +85,7 @@ export function FamilySettingsForm({ initialValues, canEdit }: { initialValues: 
                       aria-checked={field.value === opt.value}
                       onClick={() => field.onChange(opt.value)}
                       className={cn(
-                        "min-h-11 rounded-xl border-2 px-4 font-semibold",
+                        "min-h-10 rounded-lg border px-4 text-sm font-medium pointer-coarse:min-h-11",
                         field.value === opt.value ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted",
                       )}
                     >

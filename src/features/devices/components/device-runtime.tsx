@@ -45,7 +45,7 @@ export function RevokedDevice() {
   }, [router]);
   return (
     <main className="m-auto max-w-md px-4 py-16 text-center">
-      <h1 className="text-2xl font-bold">Esta pantalla fue desvinculada</h1>
+      <h1 className="text-2xl font-semibold">Esta pantalla fue desvinculada</h1>
       <p className="text-muted-foreground">Borrando su información local…</p>
     </main>
   );

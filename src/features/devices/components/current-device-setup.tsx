@@ -90,9 +90,9 @@ export function CurrentDeviceSetup({ family, kids, initialDevice }: {
   }
 
   return (
-    <form onSubmit={activate} className="mx-auto flex w-full max-w-xl flex-col gap-6 rounded-3xl border bg-card p-5 shadow-sm sm:p-8">
+    <form onSubmit={activate} className="mx-auto flex w-full max-w-xl flex-col gap-6 rounded-2xl border bg-card p-5 sm:p-7">
       <div className="space-y-2">
-        <h2 className="text-2xl font-bold">{linkedId ? "Esta pantalla ya está vinculada" : "¿Cómo se usará este dispositivo?"}</h2>
+        <h2 className="text-xl font-semibold">{linkedId ? "Esta pantalla ya está vinculada" : "¿Cómo se usará este dispositivo?"}</h2>
         <p className="text-muted-foreground">Familia: <strong className="text-foreground">{initialDevice?.familyName ?? family.name}</strong></p>
         {initialDevice ? <p>{initialDevice.name} · {initialDevice.scope === "home" ? "Pantalla familiar" : "Pantalla de un hijo"}</p> : null}
       </div>
@@ -105,7 +105,7 @@ export function CurrentDeviceSetup({ family, kids, initialDevice }: {
               setScope(mode);
               if (!editedName.current) setName(mode === "home" ? "Pantalla familiar" : `Pantalla de ${kids.find((k) => k.id === memberId)?.displayName ?? "mi hijo"}`);
             }}
-            className={`min-h-14 rounded-xl border-2 p-3 text-left font-semibold disabled:opacity-50 ${scope === mode ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted"}`}
+            className={`min-h-14 rounded-lg border p-3 text-left font-semibold disabled:opacity-50 ${scope === mode ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted"}`}
           >{mode === "home" ? "Pantalla familiar" : "Pantalla de un hijo"}</button>)}
         </div>
         <p className="text-sm text-muted-foreground">{scope === "home" ? "Agenda familiar y pendientes de la casa. Lo marcado «solo adultos» queda fuera de esta vista." : "Tareas, puntos y avisos del hijo que elijas."}</p>

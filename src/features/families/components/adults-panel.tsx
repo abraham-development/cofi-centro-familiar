@@ -70,10 +70,10 @@ export function AdultsPanel({
     <div className="flex flex-col gap-6">
       <ul className="flex flex-col gap-2">
         {adults.map((a) => (
-          <li key={a.membershipId} className="flex flex-wrap items-center gap-3 rounded-2xl border bg-card p-3">
+          <li key={a.membershipId} className="flex flex-wrap items-center gap-3 rounded-xl border bg-card p-3">
             <MemberAvatar member={{ ...a, avatarEmoji: null }} size="lg" />
             <div className="min-w-0 flex-1">
-              <p className="text-lg font-semibold">
+              <p className="font-semibold">
                 {a.displayName}
                 {a.isMe ? <span className="font-normal text-muted-foreground"> (tú)</span> : null}
               </p>
@@ -109,7 +109,7 @@ export function AdultsPanel({
 
       {isOwner ? (
         <form onSubmit={invite} className="flex flex-col gap-4 rounded-2xl border p-4">
-          <h3 className="flex items-center gap-2 text-lg font-bold">
+          <h3 className="flex items-center gap-2 font-semibold">
             <Mail aria-hidden className="size-5" /> Invitar a otro adulto
           </h3>
           <Field>
@@ -208,10 +208,10 @@ export function AdultsPanel({
 
       {invitations.length > 0 ? (
         <div className="flex flex-col gap-2">
-          <h3 className="text-lg font-bold">Invitaciones pendientes</h3>
+          <h3 className="font-semibold">Invitaciones pendientes</h3>
           <ul className="flex flex-col gap-2">
             {invitations.map((inv) => (
-              <li key={inv.id} className="flex flex-wrap items-center gap-3 rounded-2xl border p-3">
+              <li key={inv.id} className="flex flex-wrap items-center gap-3 rounded-xl border p-3">
                 <span className="min-w-0 flex-1 truncate font-medium">{inv.email}</span>
                 <span className="text-sm text-muted-foreground">
                   {ROLE_LABEL[inv.role]} · vence {formatShortDate(inv.expiresAt.slice(0, 10))}

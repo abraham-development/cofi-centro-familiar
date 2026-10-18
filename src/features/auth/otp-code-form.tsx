@@ -78,7 +78,7 @@ export function OtpCodeForm({
   return (
     <form onSubmit={verify} noValidate className="flex flex-col gap-6">
       <div className="space-y-1">
-        <h1 className="text-2xl font-bold">{title}</h1>
+        <h1 className="text-2xl font-semibold">{title}</h1>
         <p className="text-muted-foreground">
           Enviamos un código de {OTP_LENGTH} dígitos a <strong className="text-foreground">{email}</strong>. Vence en 10
           minutos.

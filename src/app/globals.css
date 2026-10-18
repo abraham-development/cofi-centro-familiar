@@ -7,9 +7,15 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-strong: var(--brand-strong);
+  --color-featured-foreground: var(--featured-foreground);
+  --color-featured-muted: var(--featured-muted);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -27,6 +33,7 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -54,87 +61,112 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/*
+ * Sistema visual (ver docs/diseno.md).
+ * Claro: lienzo gris perla, tarjetas blancas sin sombra, botones negros y
+ * acento lima con amarillo y naranja. Oscuro: casi negro azulado, tarjetas
+ * grafito con borde fino y acento lavanda.
+ */
 :root {
-  /* Tema claro: cálido, contrastado y cómodo para uso prolongado. */
-  --background: oklch(0.985 0.006 85);
-  --foreground: oklch(0.22 0.02 60);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.22 0.02 60);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.22 0.02 60);
-  --primary: oklch(0.27 0.03 265);
-  --primary-foreground: oklch(0.985 0.004 85);
-  --secondary: oklch(0.955 0.008 85);
-  --secondary-foreground: oklch(0.25 0.02 60);
-  --muted: oklch(0.955 0.008 85);
-  --muted-foreground: oklch(0.47 0.02 60);
-  --accent: oklch(0.94 0.012 85);
-  --accent-foreground: oklch(0.25 0.02 60);
-  --destructive: oklch(0.55 0.21 27);
-  --border: oklch(0.9 0.012 80);
-  --input: oklch(0.86 0.012 80);
-  --ring: oklch(0.55 0.15 265);
-  --success: oklch(0.52 0.14 150);
-  --success-foreground: oklch(0.99 0 0);
-  --warning: oklch(0.62 0.16 55);
-  --warning-foreground: oklch(0.2 0.03 60);
-  --highlight: oklch(0.88 0.16 92);
-  --highlight-foreground: oklch(0.25 0.04 70);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.875rem;
-  --sidebar: oklch(0.975 0.006 85);
-  --sidebar-foreground: oklch(0.22 0.02 60);
-  --sidebar-primary: oklch(0.27 0.03 265);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.94 0.012 85);
-  --sidebar-accent-foreground: oklch(0.25 0.02 60);
-  --sidebar-border: oklch(0.9 0.012 80);
-  --sidebar-ring: oklch(0.55 0.15 265);
+  --background: #f3f3f1;
+  --foreground: #151515;
+  --card: #ffffff;
+  --card-foreground: #151515;
+  --popover: #ffffff;
+  --popover-foreground: #151515;
+  --primary: #151515;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f1ee;
+  --secondary-foreground: #151515;
+  --muted: #f1f1ee;
+  --muted-foreground: #66665f;
+  --accent: #eeeeea;
+  --accent-foreground: #151515;
+  --destructive: #d23b40;
+  --destructive-foreground: #ffffff;
+  --border: #e6e6e2;
+  --input: #dededa;
+  --ring: #4c7a1a;
+  /* Acento de marca: relleno (nunca texto sobre blanco) y su versión legible. */
+  --brand: #8cc63f;
+  --brand-foreground: #16200a;
+  --brand-soft: #edf6e0;
+  --brand-strong: #477318;
+  --success: #336b1d;
+  --success-foreground: #ffffff;
+  --warning: #e8892e;
+  --warning-foreground: #2a1905;
+  --highlight: #f2e15a;
+  --highlight-foreground: #2a2605;
+  --chart-1: #8cc63f;
+  --chart-2: #b9de84;
+  --chart-3: #f2e15a;
+  --chart-4: #f4a259;
+  --chart-5: #e4e4e0;
+  /* Tarjeta destacada (como la tarjeta de débito de la referencia). */
+  --featured: linear-gradient(135deg, #9bd14f 0%, #84bd3a 100%);
+  --featured-foreground: #16200a;
+  --featured-muted: rgb(22 32 10 / 0.8);
+  --stripe: rgb(255 255 255 / 0.32);
+  --radius: 0.625rem;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #151515;
+  --sidebar-primary: #151515;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f1f1ee;
+  --sidebar-accent-foreground: #151515;
+  --sidebar-border: #e6e6e2;
+  --sidebar-ring: #4c7a1a;
 }
 
 .dark {
-  /* Modo nocturno: poco brillo, sin blancos puros. */
-  --background: oklch(0.17 0.012 260);
-  --foreground: oklch(0.9 0.012 80);
-  --card: oklch(0.21 0.014 260);
-  --card-foreground: oklch(0.9 0.012 80);
-  --popover: oklch(0.22 0.014 260);
-  --popover-foreground: oklch(0.9 0.012 80);
-  --primary: oklch(0.86 0.03 85);
-  --primary-foreground: oklch(0.2 0.02 260);
-  --secondary: oklch(0.26 0.014 260);
-  --secondary-foreground: oklch(0.9 0.012 80);
-  --muted: oklch(0.26 0.014 260);
-  --muted-foreground: oklch(0.72 0.015 80);
-  --accent: oklch(0.28 0.016 260);
-  --accent-foreground: oklch(0.9 0.012 80);
-  --destructive: oklch(0.68 0.17 25);
-  --border: oklch(1 0 0 / 11%);
-  --input: oklch(1 0 0 / 16%);
-  --ring: oklch(0.65 0.12 265);
-  --success: oklch(0.66 0.13 150);
-  --success-foreground: oklch(0.16 0.02 150);
-  --warning: oklch(0.74 0.14 60);
-  --warning-foreground: oklch(0.18 0.03 60);
-  --highlight: oklch(0.72 0.13 90);
-  --highlight-foreground: oklch(0.18 0.03 80);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.2 0.012 260);
-  --sidebar-foreground: oklch(0.9 0.012 80);
-  --sidebar-primary: oklch(0.65 0.12 265);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.28 0.016 260);
-  --sidebar-accent-foreground: oklch(0.9 0.012 80);
-  --sidebar-border: oklch(1 0 0 / 11%);
-  --sidebar-ring: oklch(0.65 0.12 265);
+  --background: #0b0b10;
+  --foreground: #f1f1f4;
+  --card: #14141b;
+  --card-foreground: #f1f1f4;
+  --popover: #1a1a23;
+  --popover-foreground: #f1f1f4;
+  --primary: #b3a3ff;
+  --primary-foreground: #15121f;
+  --secondary: #1c1c25;
+  --secondary-foreground: #f1f1f4;
+  --muted: #1c1c25;
+  --muted-foreground: #8f8f9d;
+  --accent: #20202a;
+  --accent-foreground: #f1f1f4;
+  --destructive: #f0616d;
+  --destructive-foreground: #22080b;
+  --border: rgb(255 255 255 / 0.08);
+  --input: rgb(255 255 255 / 0.13);
+  --ring: #b3a3ff;
+  --brand: #a794ff;
+  --brand-foreground: #15121f;
+  --brand-soft: rgb(167 148 255 / 0.14);
+  --brand-strong: #c4b8ff;
+  --success: #4ade80;
+  --success-foreground: #052e14;
+  --warning: #f5b65b;
+  --warning-foreground: #2a1905;
+  --highlight: #b3a3ff;
+  --highlight-foreground: #15121f;
+  --chart-1: #b3a3ff;
+  --chart-2: #7c6cf0;
+  --chart-3: #e879f9;
+  --chart-4: #f0616d;
+  --chart-5: #2a2a35;
+  --featured: radial-gradient(120% 90% at 85% 115%, #7a62f0 0%, rgb(122 98 240 / 0) 60%),
+    linear-gradient(170deg, #1a1730 0%, #221c45 100%);
+  --featured-foreground: #f4f2ff;
+  --featured-muted: rgb(244 242 255 / 0.7);
+  --stripe: rgb(255 255 255 / 0.22);
+  --sidebar: #14141b;
+  --sidebar-foreground: #f1f1f4;
+  --sidebar-primary: #b3a3ff;
+  --sidebar-primary-foreground: #15121f;
+  --sidebar-accent: #20202a;
+  --sidebar-accent-foreground: #f1f1f4;
+  --sidebar-border: rgb(255 255 255 / 0.08);
+  --sidebar-ring: #b3a3ff;
 }
 
 @layer base {
@@ -143,6 +175,8 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Plus Jakarta Sans tiene un espacio estrecho: se compensa para que las palabras respiren. */
+    word-spacing: 0.08em;
   }
   html {
     @apply font-sans;
@@ -164,4 +198,37 @@
     outline: 3px solid var(--ring);
     outline-offset: 2px;
   }
+}
+
+@layer base {
+  h1,
+  h2 {
+    letter-spacing: -0.01em;
+  }
+  /* Iconos de trazo fino y constante, como en las referencias. */
+  svg.lucide {
+    stroke-width: 1.75;
+  }
+}
+
+/* Cifras grandes: columnas alineadas y, en oscuro, peso ligero. */
+@utility figure {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-weight: 600;
+  &:where(.dark *) {
+    font-weight: 300;
+  }
+}
+
+/* Relleno rayado de barras de progreso. */
+@utility bg-stripes {
+  background-image: repeating-linear-gradient(-45deg, transparent 0 5px, var(--stripe) 5px 8px);
+}
+
+/* Fondo de la tarjeta destacada (lima en claro, violeta en oscuro). */
+@utility bg-featured {
+  background: var(--featured);
+  color: var(--featured-foreground);
 }

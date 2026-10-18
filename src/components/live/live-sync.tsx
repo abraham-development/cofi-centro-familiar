@@ -1,10 +1,9 @@
 "use client";
 
 import type { RealtimeChannel } from "@supabase/supabase-js";
-import { Radio, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { cn } from "cn";
 
 import { createClient, createDeviceClient } from "@/lib/supabase/client";
 
@@ -118,12 +117,13 @@ export function LiveSync({
       aria-live="polite"
       title={lastLatency !== null ? `Último aviso en ${lastLatency} ms` : undefined}
       data-live-status={status}
-      className={cn(
-        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold",
-        status === "live" ? "bg-success/15 text-foreground" : "bg-warning/20 text-foreground",
-      )}
+      className="inline-flex items-center gap-1.5 px-1 text-xs font-medium whitespace-nowrap text-muted-foreground"
     >
-      {status === "live" ? <Radio aria-hidden className="size-3.5" /> : <RefreshCw aria-hidden className="size-3.5 motion-safe:animate-spin" />}
+      {status === "live" ? (
+        <span aria-hidden className="size-2 rounded-full bg-success shadow-[0_0_0_3px] shadow-success/20" />
+      ) : (
+        <RefreshCw aria-hidden className="size-3.5 text-warning motion-safe:animate-spin" />
+      )}
       {status === "live" ? "En vivo" : status === "connecting" ? "Conectando…" : "Reconectando…"}
     </span>
   );

@@ -2,12 +2,15 @@
 const nextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
-  // Hostinger's shared Linux image cannot load Next 16's native SWC binary.
-  // Webpack can use the matching WASM compiler without changing app behavior.
-  ...(process.env.COFI_HOSTINGER_BUILD === "1" ? {
-    output: "standalone",
-    experimental: { useWasmBinary: true },
-  } : {}),
+  experimental: {
+    // La caché en disco de `next dev` servía, tras reiniciar, chunks viejos que
+    // Turbopack mandaba recargar en bucle (ver AGENTS.md). Solo afecta a desarrollo.
+    turbopackFileSystemCacheForDev: false,
+    // Hostinger's shared Linux image cannot load Next 16's native SWC binary.
+    // Webpack can use the matching WASM compiler without changing app behavior.
+    ...(process.env.COFI_HOSTINGER_BUILD === "1" ? { useWasmBinary: true } : {}),
+  },
+  ...(process.env.COFI_HOSTINGER_BUILD === "1" ? { output: "standalone" } : {}),
   async headers() {
     return [
       { source: "/sw.js", headers: [

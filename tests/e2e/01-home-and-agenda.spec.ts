@@ -23,7 +23,7 @@ test("la pantalla de casa muestra la fecha real, el próximo evento y el radar",
   // Datos de otra familia nunca aparecen.
   await expect(page.getByText("Cumpleaños del abuelo (Pérez)")).toHaveCount(0);
 
-  const pending = page.getByRole("region", { name: "Pendientes de la casa" });
+  const pending = page.getByRole("region", { name: "Pendientes de hoy" });
   await expect(pending.getByText("Comprar gas")).toBeVisible();
   await expect(pending.getByText(/Atrasado/).first()).toBeVisible();
   expect(problems, problems.join("\n")).toEqual([]);
@@ -53,7 +53,7 @@ test("crear, editar y cancelar un evento persiste en la base de datos", async ({
 
   // Editar
   await page.goto(`/agenda?desde=${date}&dias=1`);
-  await page.getByRole("link", { name: new RegExp(title.replace(/[[\]]/g, "\\$&")) }).click();
+  await page.getByRole("link", { name: new RegExp(title.replace(/[[\]]/g, "\\$&")) }).press("Enter");
   await page.getByLabel("Empieza").fill("15:30");
   await page.getByRole("button", { name: "Guardar cambios" }).click();
   await expect(page).toHaveURL(/\/agenda$/);
@@ -61,7 +61,7 @@ test("crear, editar y cancelar un evento persiste en la base de datos", async ({
   await expect(page.getByRole("link", { name: new RegExp(title.replace(/[[\]]/g, "\\$&")) })).toContainText("3:30 PM");
 
   // Cancelar (con confirmación explícita)
-  await page.getByRole("link", { name: new RegExp(title.replace(/[[\]]/g, "\\$&")) }).click();
+  await page.getByRole("link", { name: new RegExp(title.replace(/[[\]]/g, "\\$&")) }).press("Enter");
   await page.getByRole("button", { name: "Cancelar evento" }).click();
   await page.getByLabel("Motivo (opcional)").fill("Prueba automática");
   await page.getByRole("button", { name: "Sí, cancelar evento" }).click();
@@ -73,7 +73,7 @@ test("crear, editar y cancelar un evento persiste en la base de datos", async ({
 test("un pendiente del hogar se crea, se completa y sigue completado al recargar", async ({ page }) => {
   await login(page, "MAMA");
   const title = `[E2E] Sacar la basura ${Date.now()}`;
-  const pending = page.getByRole("region", { name: "Pendientes de la casa" });
+  const pending = page.getByRole("region", { name: "Pendientes de hoy" });
   await pending.getByLabel("Nuevo pendiente para hoy").fill(title);
   await pending.getByRole("button", { name: "Agregar pendiente" }).click();
   await expect(pending.getByText(title)).toBeVisible();
@@ -84,6 +84,6 @@ test("un pendiente del hogar se crea, se completa y sigue completado al recargar
   await expect(page.getByText(`Hecho: ${title}`)).toBeVisible();
   await page.reload();
   await expect(
-    page.getByRole("region", { name: "Pendientes de la casa" }).getByRole("button", { name: `Reabrir: ${title}` }),
+    page.getByRole("region", { name: "Pendientes de hoy" }).getByRole("button", { name: `Reabrir: ${title}` }),
   ).toBeVisible();
 });

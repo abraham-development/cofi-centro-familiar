@@ -1,0 +1,35 @@
+{
+  "build": "01a14f28-0d28-703e-8696-db7a055ac7dc",
+  "base": "https://mediumturquoise-elephant-247172.hostingersite.com",
+  "verifiedAt": "2026-10-18T13:20:23.447Z",
+  "checks": [
+    "claro: tema según el equipo y fondo rgb(243, 243, 241)",
+    "claro: Casa con fila de cifras y paneles",
+    "claro: sin emojis de sistema como iconos",
+    "claro: Agenda, Pendientes, Tareas, Premios y Ajustes cargan",
+    "oscuro: tema según el equipo y fondo rgb(11, 11, 16)",
+    "oscuro: Casa con fila de cifras y paneles",
+    "oscuro: sin emojis de sistema como iconos",
+    "oscuro: Agenda, Pendientes, Tareas, Premios y Ajustes cargan",
+    "selector: «Oscuro» aplica el tema lavanda",
+    "selector: «Según el equipo» vuelve al claro del equipo",
+    "celular (claro): Casa sin desbordes",
+    "celular (oscuro): Casa sin desbordes"
+  ],
+  "errors": [],
+  "source": {
+    "archive": "COFI_20261018_081610.zip",
+    "files": 214,
+    "bytes": 388402,
+    "sha256": "5fd6ab5b40482e6e748a2065d53728c7fba613a8c67a984ed052684a74041505"
+  },
+  "local_validation": {
+    "vitest": 52,
+    "e2e_full_suite": 41,
+    "contrast_aa_both_themes": true,
+    "compatible_build": true,
+    "seed_executed": true,
+    "migrations_added": false
+  },
+  "method": "Playwright de solo lectura con la cuenta ficticia de Mamá, con esquema de color claro y oscuro; el cambio de tema solo afecta al navegador de prueba"
+}

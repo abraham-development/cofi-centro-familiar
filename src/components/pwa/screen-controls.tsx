@@ -46,7 +46,7 @@ export function ScreenControls({ preferenceId, timezone, quietStart, quietEnd, h
 
   useEffect(() => {
     if (!autoNight) return;
-    try { previousTheme.current = localStorage.getItem("theme") || "light"; } catch { previousTheme.current = "light"; }
+    try { previousTheme.current = localStorage.getItem("theme") || "system"; } catch { previousTheme.current = "system"; }
     return () => { if (previousTheme.current) setTheme(previousTheme.current); };
   }, [autoNight, setTheme]);
 
@@ -78,7 +78,7 @@ export function ScreenControls({ preferenceId, timezone, quietStart, quietEnd, h
   }, [keepAwake, supported]);
 
   return (
-    <section aria-label="Opciones de pantalla" className="flex flex-wrap items-center gap-3 rounded-2xl border bg-card p-3 text-sm">
+    <section aria-label="Opciones de pantalla" className="flex flex-wrap items-center gap-3 rounded-xl border bg-card p-3 text-sm">
       <Button data-offline-safe variant="outline" aria-pressed={keepAwake} disabled={!supported} onClick={() => toggle("awake")}>
         <Monitor aria-hidden /> {keepAwake ? "Desactivar pantalla encendida" : "Mantener pantalla encendida"}
       </Button>

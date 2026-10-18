@@ -48,7 +48,7 @@ export function UpdatePasswordForm({ onDone }: { onDone?: () => void }) {
   const { errors, isSubmitting } = form.formState;
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} noValidate className="flex flex-col gap-6">
-      <h1 className="text-2xl font-bold">Nueva contraseña</h1>
+      <h1 className="text-2xl font-semibold">Nueva contraseña</h1>
       {error ? (
         <Alert variant="destructive" role="alert">
           <AlertDescription>{error}</AlertDescription>

@@ -12,11 +12,13 @@ export function EmptyState({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed px-6 py-10 text-center">
-      <Icon aria-hidden className="size-8 text-muted-foreground" />
+    <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed px-6 py-8 text-center">
+      <span className="grid size-10 place-items-center rounded-lg bg-muted">
+        <Icon aria-hidden className="size-5 text-muted-foreground" />
+      </span>
       <div className="space-y-1">
-        <p className="text-lg font-semibold">{title}</p>
-        {description ? <p className="text-muted-foreground">{description}</p> : null}
+        <p className="font-semibold">{title}</p>
+        {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
       </div>
       {action}
     </div>

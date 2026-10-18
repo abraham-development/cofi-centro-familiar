@@ -1,0 +1,33 @@
+{
+  "build": "01a14b0d-43f1-7064-a2ac-f6be61f9a687",
+  "base": "https://mediumturquoise-elephant-247172.hostingersite.com",
+  "verifiedAt": "2026-10-17T18:12:23.166Z",
+  "checks": [
+    "padres: «Mamá · Padres» en la cabecera",
+    "padres: indicador a la izquierda de «En vivo»",
+    "tareas: Mateo elegido en la barra lateral",
+    "tareas: vista centrada en Mateo, sin Sofía",
+    "tareas: «Ver 30 días»",
+    "hijo: aviso de vista previa del adulto",
+    "premios: saldo, pedidos, premios, canjes y movimientos de Mateo",
+    "celular: avatar de Mamá como botón del menú",
+    "celular: /responsabilidades con un hijo elegido sin desbordes",
+    "celular: /premios con un hijo elegido sin desbordes"
+  ],
+  "errors": [],
+  "source": {
+    "archive": "/tmp/claude-1000/-home-abraham2-Proyectos-COFI/af03c4ec-33d7-484d-a822-5a5d8acd01c7/scratchpad/COFI_20261017_130816.zip",
+    "files": 206,
+    "bytes": 368426,
+    "sha256": "9aca522ed58b6e1c1fd8ef1480667525d15271a2f1b2cf349aefcda5819573f0"
+  },
+  "local_validation": {
+    "vitest": 45,
+    "pgtap": 180,
+    "e2e_full_suite": 34,
+    "compatible_build": true,
+    "seed_executed": true,
+    "migrations_added": false
+  },
+  "method": "Playwright de solo lectura con la cuenta ficticia de Mamá; sin vincular pantallas ni modificar datos"
+}

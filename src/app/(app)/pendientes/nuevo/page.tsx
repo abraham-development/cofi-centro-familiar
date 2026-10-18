@@ -36,7 +36,7 @@ export default function NewTaskPage(props: PageProps<"/pendientes/nuevo">) {
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <PageHeader title="Nuevo pendiente" />
-      <Suspense fallback={<Skeleton className="h-[32rem] rounded-3xl" />}>
+      <Suspense fallback={<Skeleton className="h-[32rem] rounded-2xl" />}>
         <NewTask searchParams={props.searchParams} />
       </Suspense>
     </div>

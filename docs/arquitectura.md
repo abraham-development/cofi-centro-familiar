@@ -106,6 +106,38 @@ Cada pantalla dice quién la usa y en qué mundo está. Lo hace con `IdentityBad
 - «Todos» conserva la vista general de antes.
 - Las grillas anidadas usan `grid-cols-1`. Sin eso, las columnas implícitas se ensanchan con el contenido y desbordan el celular.
 
+## Agenda: calendario y día por horas
+
+La agenda sirve para **apuntar algo importante y no olvidarlo**. Lo esencial es qué es y a qué hora empieza; la duración es opcional.
+
+- **`/agenda?dia=YYYY-MM-DD`** (por defecto, hoy).
+  - A la izquierda está `MiniMonth`: el mes en una grilla de 6 semanas, con enlaces renderizados en el servidor y puntos del color de los participantes.
+  - A la derecha está `DayPlanner`: el día por horas, de 6:00 a 24:00. La grilla se amplía si hay eventos de madrugada y, si el día es hoy, para incluir la hora actual.
+  - En el celular, el orden es calendario, Día/Lista, el día y, al final, los filtros.
+- **Lista:** `?vista=lista&dias=7|30` conserva la lista anterior.
+- **Compatibilidad:**
+  - `?desde=X&dias=1` abre el día X;
+  - `?dias=7|30` abre la Lista;
+  - `vista=mes` ya no existe; el calendario lateral reemplaza la grilla del mes.
+- **Geometría:** `domain/day-layout.ts` es una función pura con pruebas Vitest.
+  - Ubica cada evento por su hora local y reparte en columnas los que se solapan.
+  - Un evento sin hora de fin ocupa 30 min visuales.
+  - Si cruza la medianoche, aparece recortado en ambos días.
+  - Un evento que termina exactamente a medianoche llega al final del día y no toca el siguiente, igual que `local_end_date`.
+- **Agendar:**
+  - Cada hora libre es un botón («Agendar a las 5:00 PM»). Con el ratón o el dedo, la mitad inferior propone la media hora; con el teclado, la hora en punto.
+  - Los bloques dejan libre una franja a la derecha, así que siempre se puede agendar aunque haya algo a esa hora.
+  - Hoy no se agenda en horas ya pasadas, y los días pasados solo se consultan.
+- **`QuickScheduleDialog`:**
+  - Pide qué es, la hora de inicio (editable), la duración (opcional, «No sé» por defecto) y los avisos (1 h y 15 min antes marcados, decisión del usuario), con integrantes opcionales.
+  - Avisa, sin bloquear, si ya hay algo a esa hora.
+  - Guarda con `createEventAction`, con un `commandId` por apertura para la idempotencia. No hubo cambios de backend.
+- **«Más opciones»** pasa lo escrito al formulario completo por `sessionStorage` (`draft.ts`), no por la URL, para que el título no quede en historiales ni registros. El formulario lo lee una sola vez (`?borrador=1`).
+  - La ventana se cierra antes de navegar: Next conserva oculta la página anterior y el portal seguiría montado.
+- **Formulario completo:** `newEventDefaults` marca los avisos de 60 y 15 min para todo evento nuevo, y `/agenda/nuevo?hora=HH:MM` abre sin hora de fin.
+
+**Pendientes de hoy:** los pendientes son del día a día y la agenda muestra solo lo agendado. La pestaña y los encabezados de `/casa` y `/pantalla` se llaman «Pendientes de hoy»; la URL sigue siendo `/pendientes`. En la lista completa, lo de fechas posteriores queda plegado en «Más adelante (N)».
+
 ## Recurrencias
 
 - `private.recurrence_dates(...)` es el **único motor**: devuelve fechas locales.
@@ -132,6 +164,13 @@ Cada pantalla dice quién la usa y en qué mundo está. Lo hace con `IdentityBad
 El Hito C añade una outbox transaccional de recordatorios y reglas de preparativos aceptadas por adultos. `pg_cron` procesa los trabajos por lotes; avisos internos y entregas Push llevan estados separados. `/avisos` presenta reconocimiento por destinatario y salud del procesamiento. La migración y sus 33 aserciones específicas están verificadas; el emisor externo de Push continúa pendiente.
 
 La PWA mantiene el service worker limitado a recursos públicos y guarda una proyección de consulta con caducidad por identidad y familia. No cachea respuestas autenticadas ni implementa escrituras sin red. Ver [política y pruebas de PWA](pwa.md).
+
+## Sistema visual y temas
+
+- La interfaz sigue [docs/diseno.md](diseno.md): claro al estilo ACRU y oscuro al estilo Stakent.
+- Los colores son tokens CSS en `src/app/globals.css`. Las tarjetas se construyen con `Panel`, `Stat` y `Meter` (`src/components/`).
+- **Tema:** `next-themes` con `defaultTheme="system"`. El menú del usuario ofrece Claro / Oscuro / «Según el equipo» (`DropdownMenuRadioGroup` con `closeOnClick`).
+- La noche automática de las pantallas (`screen-controls.tsx`) fuerza el tema oscuro en el horario de silencio y luego restaura la elección anterior (por defecto, `system`).
 
 ## Decisiones registradas
 

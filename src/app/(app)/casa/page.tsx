@@ -1,4 +1,4 @@
-import { ClipboardPlus } from "lucide-react";
+import { ArrowUpRight, CalendarDays, ClipboardList, ClipboardPlus, Coins, ListChecks } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -8,7 +8,10 @@ import { SnapshotSaver } from "@/components/pwa/snapshot-saver";
 import { makeSnapshot } from "@/lib/pwa/snapshot";
 import { ClockProvider } from "@/components/clock/clock-provider";
 import { ContextClock } from "@/components/clock/context-clock";
-import { Button } from "@/components/ui/button";
+import { Meter } from "@/components/meter";
+import { Panel } from "@/components/panel";
+import { Stat } from "@/components/stat";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { HighlightsPanel } from "@/features/calendar/components/highlights-panel";
 import { ChildrenSummary } from "@/features/children/components/children-summary";
 import { listMembers } from "@/features/families/queries";
@@ -21,10 +24,12 @@ import { HouseholdList } from "@/features/tasks/components/household-list";
 import { QuickAddHousehold } from "@/features/tasks/components/quick-add-household";
 import { ScreenNotices } from "@/features/notifications/components/screen-notices";
 import { listNotifications } from "@/features/notifications/queries";
+import { dailyProgress } from "@/features/tasks/domain/child-tasks";
+import { householdUrgency } from "@/features/tasks/domain/household";
 import { listHouseholdTasks } from "@/features/tasks/queries";
 import { requireAdultWithFamily } from "@/lib/auth/session";
 import { requestNow } from "@/lib/time/request-now";
-import { addDays, localDateOf, localToInstant } from "@/lib/time/zoned";
+import { addDays, epochFromIso, localDateOf, localToInstant } from "@/lib/time/zoned";
 
 export const metadata: Metadata = { title: "Casa" };
 
@@ -46,13 +51,55 @@ async function HomeDashboard() {
     listNotifications(ctx.supabase, family.id, { since: new Date(serverNow - 36 * 3600_000).toISOString(), limit: 30 }),
   ]);
 
+  // Cifras del día (se recalculan con cada actualización en vivo).
+  const todayEvents = events.filter((e) => e.status === "scheduled" && e.localStartDate <= today && e.localEndDate >= today);
+  const comingToday = todayEvents.filter((e) => !e.isAllDay && e.startsAt && epochFromIso(e.startsAt) > serverNow).length;
+  const openToday = tasks.filter((t) => t.status === "pending" && ["overdue", "today"].includes(householdUrgency(t, today, serverNow)));
+  const overdue = openToday.filter((t) => householdUrgency(t, today, serverNow) === "overdue").length;
+  const kids = members.filter((m) => m.kind === "child");
+  const kidsProgress = dailyProgress(childTasks, today);
+  const points = kids.reduce((sum, k) => sum + (balances.get(k.id) ?? 0), 0);
+
   return (
     <ClockProvider serverNow={serverNow} timeZone={family.timezone} hourFormat={family.hourFormat}>
       <SnapshotSaver snapshot={makeSnapshot({ actor: "adult", identity: ctx.user.id, family, label: "Casa", now: serverNow, events, tasks: [...tasks, ...childTasks], members })} />
       <ContextClock events={events} homeColor={family.homeColor} />
       <ScreenNotices notifications={notifications} recipient={`user:${ctx.user.id}`} actor="adult" />
-      <div className="grid gap-6 xl:grid-cols-3">
-        <div className="flex flex-col gap-6 xl:col-span-2">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <Stat
+          href="/agenda"
+          icon={<CalendarDays aria-hidden className="size-4" />}
+          label="Agendado hoy"
+          value={todayEvents.length}
+          note={comingToday ? `${comingToday} por venir` : "Nada más por hoy"}
+        />
+        <Stat
+          href="/pendientes"
+          icon={<ClipboardList aria-hidden className="size-4" />}
+          label="Pendientes del día"
+          value={openToday.length}
+          note={overdue ? `${overdue} ${overdue === 1 ? "atrasado" : "atrasados"}` : "Todo al día"}
+        />
+        <Stat
+          href="/responsabilidades"
+          icon={<ListChecks aria-hidden className="size-4" />}
+          label="Tareas de los hijos"
+          value={kidsProgress.done}
+          unit={`de ${kidsProgress.total}`}
+        >
+          <Meter value={kidsProgress.done} max={kidsProgress.total} label="Tareas de los hijos cumplidas hoy" />
+        </Stat>
+        <Stat
+          href="/premios"
+          icon={<Coins aria-hidden className="size-4" />}
+          label="Puntos de los hijos"
+          value={points}
+          unit="pts"
+          note={kids.map((k) => `${k.displayName} ${balances.get(k.id) ?? 0}`).join(" · ") || "Sin hijos registrados"}
+        />
+      </div>
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+        <div className="flex min-w-0 flex-col gap-4 xl:col-span-2">
           <TodayTimeline
             events={events}
             tasks={tasks}
@@ -62,19 +109,17 @@ async function HomeDashboard() {
           />
           <WeekRadar events={events} homeColor={family.homeColor} />
         </div>
-        <div className="flex flex-col gap-6">
-          <section
-            aria-labelledby="pendientes-titulo"
-            className="flex flex-col gap-4 rounded-3xl border bg-card p-5 shadow-sm sm:p-6"
+        <div className="flex min-w-0 flex-col gap-4">
+          <Panel
+            id="pendientes-titulo"
+            title="Pendientes de hoy"
+            caption="Lo del día a día"
+            actions={
+              <Link href="/pendientes" className={buttonVariants({ variant: "ghost", size: "sm" })}>
+                Ver todos <ArrowUpRight aria-hidden />
+              </Link>
+            }
           >
-            <div className="flex items-center justify-between gap-2">
-              <h2 id="pendientes-titulo" className="text-2xl font-bold">
-                Pendientes de la casa
-              </h2>
-              <Button variant="ghost" nativeButton={false} render={<Link href="/pendientes" />}>
-                Ver todos
-              </Button>
-            </div>
             <HouseholdList
               tasks={tasks}
               emptyAction={
@@ -84,9 +129,9 @@ async function HomeDashboard() {
               }
             />
             <QuickAddHousehold />
-          </section>
+          </Panel>
           <ChildrenSummary
-            kids={members.filter((m) => m.kind === "child")}
+            kids={kids}
             tasks={childTasks}
             balances={Object.fromEntries(balances)}
             linkToDetail

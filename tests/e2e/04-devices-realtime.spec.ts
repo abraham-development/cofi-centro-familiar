@@ -94,11 +94,11 @@ test("un evento creado en el celular aparece en la cocina sin recargar", async (
 test("la cocina marca un pendiente y el celular lo ve en vivo", async () => {
   await mama.goto("/casa");
   await expect(mama.getByText("En vivo").first()).toBeVisible({ timeout: 20_000 });
-  const kitchenPending = kitchen.getByRole("region", { name: "Pendientes de la casa" });
+  const kitchenPending = kitchen.getByRole("region", { name: "Pendientes de hoy" });
   const start = Date.now();
   await kitchenPending.getByRole("button", { name: "Marcar como hecho: Comprar gas" }).click();
   await expect(
-    mama.getByRole("region", { name: "Pendientes de la casa" }).getByRole("button", { name: "Reabrir: Comprar gas" }),
+    mama.getByRole("region", { name: "Pendientes de hoy" }).getByRole("button", { name: "Reabrir: Comprar gas" }),
   ).toBeVisible({ timeout: 15_000 });
   recordLatency("pendiente cocina→celular", Date.now() - start);
 });

@@ -47,14 +47,14 @@ export function NotificationsCenter({
         const seenBy = n.receipts.filter((r) => r.acknowledgedAt).map((r) => names[r.recipient] ?? "Otro dispositivo");
         const day = localDateOf(epochFromIso(n.createdAt), timeZone);
         return (
-          <li key={n.id} className={cn("flex flex-wrap items-start gap-3 rounded-2xl border p-3", !mine && "border-2 border-ring")}>
+          <li key={n.id} className={cn("flex flex-wrap items-start gap-3 rounded-xl border p-3", !mine && "border-2 border-ring")}>
             <div className="min-w-0 flex-1">
               <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
                 {day === today ? "Hoy" : formatShortDate(day)} · {formatInstantTime(n.createdAt, timeZone, hourFormat)}
                 <Badge variant="outline">{AUDIENCE[n.audience]}{n.audience === "member" && n.memberId ? `: ${names[`member:${n.memberId}`] ?? ""}` : ""}</Badge>
                 {n.importance === "high" ? <Badge>Importante</Badge> : null}
               </p>
-              <p className="text-lg font-bold">{n.title}</p>
+              <p className="font-semibold">{n.title}</p>
               {n.body ? <p>{n.body}</p> : null}
               {seenBy.length ? <p className="mt-1 text-sm text-muted-foreground">Visto por: {seenBy.join(", ")}</p> : null}
             </div>

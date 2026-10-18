@@ -85,7 +85,7 @@ export function MemberDialog({
                 avatarEmoji: preview.avatarEmoji || null,
               }}
             />
-            <span className="text-lg font-semibold">{displayName || "Vista previa"}</span>
+            <span className="font-semibold">{displayName || "Vista previa"}</span>
           </div>
           <FieldGroup>
             <Field data-invalid={!!errors.displayName}>
@@ -109,7 +109,7 @@ export function MemberDialog({
                         disabled={lockKind}
                         onClick={() => field.onChange(k.value)}
                         className={cn(
-                          "min-h-11 rounded-xl border-2 px-3 font-semibold disabled:opacity-60",
+                          "min-h-10 rounded-lg border px-3 text-sm font-medium pointer-coarse:min-h-11 disabled:opacity-60",
                           field.value === k.value ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted",
                         )}
                       >

@@ -44,9 +44,9 @@ export function RewardsManager({ rewards, kids }: { rewards: Reward[]; kids: Mem
       ) : (
         <ul className="flex flex-col gap-2">
           {rewards.map((r) => (
-            <li key={r.id} className="flex flex-wrap items-center gap-3 rounded-2xl border bg-card p-3">
+            <li key={r.id} className="flex flex-wrap items-center gap-3 rounded-xl border bg-card p-3">
               <div className="min-w-0 flex-1">
-                <p className="flex flex-wrap items-center gap-2 text-lg font-semibold">
+                <p className="flex flex-wrap items-center gap-2 font-semibold">
                   {r.title}
                   {!r.isAvailable ? <Badge variant="secondary">No disponible</Badge> : null}
                 </p>
@@ -171,7 +171,7 @@ function RewardDialog({ reward, kids, trigger }: { reward?: Reward; kids: Member
                             field.onChange(selected ? field.value.filter((id) => id !== k.id) : [...field.value, k.id])
                           }
                           className={cn(
-                            "flex min-h-11 items-center gap-2 rounded-full border-2 py-1 pr-4 pl-1 font-semibold",
+                            "flex min-h-10 items-center gap-2 rounded-lg border py-1 pr-3 pl-1 text-sm font-medium pointer-coarse:min-h-11",
                             !selected && "hover:bg-muted",
                           )}
                           style={selected ? { borderColor: k.color, backgroundColor: `${k.color}1f` } : undefined}

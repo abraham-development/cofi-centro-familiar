@@ -108,12 +108,12 @@ export function HouseholdForm({
       ) : null}
       <FieldGroup>
         <Field data-invalid={!!errors.title}>
-          <FieldLabel htmlFor="title" className="text-lg">
+          <FieldLabel htmlFor="title" className="text-[0.95rem]">
             ¿Qué hay que hacer?
           </FieldLabel>
           <Input
             id="title"
-            className="h-14 text-xl"
+            className="h-12 text-lg"
             placeholder="Ej.: Descongelar el pollo"
             maxLength={120}
             aria-invalid={!!errors.title}
@@ -154,7 +154,7 @@ export function HouseholdForm({
                   aria-pressed={field.value === null}
                   onClick={() => field.onChange(null)}
                   className={cn(
-                    "min-h-11 rounded-full border-2 px-4 font-semibold",
+                    "min-h-10 rounded-lg border px-4 text-sm font-medium pointer-coarse:min-h-11",
                     field.value === null ? "border-primary bg-primary/5" : "hover:bg-muted",
                   )}
                 >
@@ -167,7 +167,7 @@ export function HouseholdForm({
                     aria-pressed={field.value === m.id}
                     onClick={() => field.onChange(m.id)}
                     className={cn(
-                      "flex min-h-11 items-center gap-2 rounded-full border-2 py-1 pr-4 pl-1 font-semibold",
+                      "flex min-h-10 items-center gap-2 rounded-lg border py-1 pr-3 pl-1 text-sm font-medium pointer-coarse:min-h-11",
                       field.value !== m.id && "hover:bg-muted",
                     )}
                     style={field.value === m.id ? { borderColor: m.color, backgroundColor: `${m.color}1f` } : undefined}
@@ -196,7 +196,7 @@ export function HouseholdForm({
                     aria-checked={field.value === p.value}
                     onClick={() => field.onChange(p.value)}
                     className={cn(
-                      "min-h-11 rounded-xl border-2 px-4 font-semibold",
+                      "min-h-10 rounded-lg border px-4 text-sm font-medium pointer-coarse:min-h-11",
                       field.value === p.value ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted",
                     )}
                   >

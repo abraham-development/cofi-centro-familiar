@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { cn } from "cn";
 
@@ -7,7 +8,10 @@ import { buildRadar } from "../domain/radar";
 import type { AgendaEvent } from "../types";
 import { CategoryIcon } from "@/components/category-icon";
 import { useClock } from "@/components/clock/clock-provider";
+import { ImportantMark } from "@/components/important-mark";
 import { MemberStack } from "@/components/member-chip";
+import { Panel } from "@/components/panel";
+import { buttonVariants } from "@/components/ui/button";
 import { formatInstantTime, formatShortDate, localDateOf, relativeDayLabel, WEEKDAYS } from "@/lib/time/zoned";
 import { Temporal } from "temporal-polyfill";
 
@@ -25,40 +29,44 @@ export function WeekRadar({ events, homeColor }: { events: AgendaEvent[]; homeCo
   const days = buildRadar(events, today, { days: 7, maxPerDay: 4 });
 
   return (
-    <section aria-labelledby="radar-titulo" className="flex flex-col gap-4 rounded-3xl border bg-card p-5 shadow-sm sm:p-6">
-      <div className="flex items-center justify-between">
-        <h2 id="radar-titulo" className="text-2xl font-bold">
-          Próximos 7 días
-        </h2>
-        <Link href="/agenda" className="font-semibold underline-offset-4 hover:underline">
-          Ver agenda
+    <Panel
+      id="radar-titulo"
+      title="Próximos 7 días"
+      caption="Lo que viene en la semana"
+      actions={
+        <Link href="/agenda" className={buttonVariants({ variant: "ghost", size: "sm" })}>
+          Ver agenda <ArrowUpRight aria-hidden />
         </Link>
-      </div>
-      <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      }
+    >
+      <ol className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
         {days.map((day) => {
           const heading = dayHeading(day.date, today);
           return (
             <li
               key={day.date}
-              className={cn("flex flex-col gap-2 rounded-2xl border p-3", day.isToday && "border-2 border-ring")}
+              className={cn(
+                "flex flex-col gap-3 rounded-xl p-3",
+                day.isToday ? "bg-brand-soft ring-1 ring-brand/40 ring-inset" : "bg-muted/60",
+              )}
             >
-              <h3 className="leading-tight">
-                <span className="block text-lg font-bold">{heading.title}</span>
-                <span className="text-sm text-muted-foreground">{heading.subtitle}</span>
+              <h3 className="flex items-baseline justify-between gap-2 leading-tight">
+                <span className="font-semibold">{heading.title}</span>
+                <span className="text-xs text-muted-foreground">{heading.subtitle}</span>
               </h3>
               {day.total === 0 ? (
                 <p className="text-sm text-muted-foreground">Sin eventos</p>
               ) : (
-                <ul className="flex flex-col gap-2">
+                <ul className="flex flex-col gap-2.5">
                   {day.visible.map((event) => (
-                    <li key={event.id} className="flex flex-col gap-0.5">
-                      <p className="flex items-center gap-1 text-sm font-semibold text-muted-foreground tabular-nums">
+                    <li key={event.id} className="flex flex-col gap-1">
+                      <p className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground tabular-nums">
                         <CategoryIcon icon={event.category?.icon} className="size-3.5" />
                         {event.isAllDay ? "Todo el día" : formatInstantTime(event.startsAt!, timeZone, hourFormat)}
                       </p>
-                      <p className="font-semibold leading-snug">
+                      <p className="text-sm leading-snug font-semibold">
                         {event.title}
-                        {event.importance === "high" ? <span aria-label="importante"> ⭐</span> : null}
+                        {event.importance === "high" ? <ImportantMark className="ml-1 align-[-2px]" /> : null}
                       </p>
                       <MemberStack members={event.participants} wholeFamily={event.wholeFamily} homeColor={homeColor} max={3} />
                     </li>
@@ -67,8 +75,8 @@ export function WeekRadar({ events, homeColor }: { events: AgendaEvent[]; homeCo
               )}
               {day.hiddenCount > 0 ? (
                 <Link
-                  href={`/agenda?desde=${day.date}&dias=1`}
-                  className="mt-auto text-sm font-semibold underline-offset-4 hover:underline"
+                  href={`/agenda?dia=${day.date}`}
+                  className="mt-auto text-xs font-semibold text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                 >
                   +{day.hiddenCount} más
                 </Link>
@@ -77,6 +85,6 @@ export function WeekRadar({ events, homeColor }: { events: AgendaEvent[]; homeCo
           );
         })}
       </ol>
-    </section>
+    </Panel>
   );
 }

@@ -70,10 +70,8 @@ export function MemberStack({
   if (wholeFamily) {
     const color = homeColor ?? "#FACC15";
     return (
-      <span
-        className="inline-flex items-center rounded-full px-2.5 py-0.5 text-sm font-semibold"
-        style={{ backgroundColor: color, color: readableTextColor(color) }}
-      >
+      <span className="inline-flex w-fit shrink-0 items-center gap-1.5 rounded-md bg-muted px-1.5 py-0.5 text-[0.6875rem] font-semibold text-foreground">
+        <span aria-hidden className="size-2 rounded-full" style={{ backgroundColor: color }} />
         Toda la casa
       </span>
     );

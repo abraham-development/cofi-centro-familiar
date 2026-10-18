@@ -29,11 +29,11 @@ export function ChildrenSidebar({
   allStat?: string;
 }) {
   const itemClass =
-    "flex min-h-11 shrink-0 items-center gap-3 rounded-2xl border-2 px-3 py-2 transition-colors lg:w-full";
+    "relative flex min-h-11 shrink-0 items-center gap-3 rounded-xl border px-2.5 py-2 transition-colors lg:w-full lg:border-transparent";
   return (
-    <nav aria-label="Hijos" className="min-w-0 lg:sticky lg:top-20 lg:self-start">
-      <p className="mb-2 hidden px-1 text-sm font-semibold tracking-wide text-muted-foreground uppercase lg:block">Hijos</p>
-      <ul className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 lg:mx-0 lg:flex-col lg:overflow-visible lg:px-0 lg:pb-0">
+    <nav aria-label="Hijos" className="min-w-0 lg:sticky lg:top-20 lg:self-start lg:rounded-2xl lg:border lg:bg-card lg:p-2">
+      <p className="mb-1 hidden px-2.5 pt-1 text-xs font-medium text-muted-foreground lg:block">Hijos</p>
+      <ul className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 lg:mx-0 lg:flex-col lg:gap-0.5 lg:overflow-visible lg:px-0 lg:pb-0">
         <li className="shrink-0 lg:shrink">
           <Link
             href={basePath}
@@ -41,15 +41,15 @@ export function ChildrenSidebar({
             aria-current={selectedId === null ? "page" : undefined}
             className={cn(
               itemClass,
-              selectedId === null ? "border-primary bg-primary text-primary-foreground" : "border-transparent bg-card hover:bg-muted",
+              selectedId === null ? "border-border bg-muted lg:border-transparent" : "bg-card hover:bg-muted/60 lg:bg-transparent",
             )}
           >
-            <span aria-hidden className="grid size-9 place-items-center rounded-full bg-muted text-foreground">
-              <Users className="size-5" />
+            <span aria-hidden className="grid size-9 place-items-center rounded-lg bg-card text-foreground ring-1 ring-border">
+              <Users className="size-4" />
             </span>
             <span className="flex flex-col leading-tight">
-              <span className="font-semibold">Todos</span>
-              {allStat ? <span className={cn("text-sm", selectedId === null ? "opacity-90" : "text-muted-foreground")}>{allStat}</span> : null}
+              <span className="text-sm font-semibold">Todos</span>
+              {allStat ? <span className="text-xs text-muted-foreground">{allStat}</span> : null}
             </span>
           </Link>
         </li>
@@ -61,16 +61,21 @@ export function ChildrenSidebar({
                 href={`${basePath}?hijo=${kid.id}`}
                 scroll={false}
                 aria-current={selected ? "page" : undefined}
-                className={cn(itemClass, !selected && "border-transparent bg-card hover:bg-muted")}
-                style={selected ? { borderColor: kid.color, backgroundColor: `${kid.color}1f` } : undefined}
+                className={cn(
+                  itemClass,
+                  selected ? "border-border bg-muted lg:border-transparent" : "bg-card hover:bg-muted/60 lg:bg-transparent",
+                )}
               >
+                {selected ? (
+                  <span aria-hidden className="absolute inset-y-2 left-0 w-[3px] rounded-full" style={{ backgroundColor: kid.color }} />
+                ) : null}
                 <MemberAvatar member={kid} size="md" className="ring-0" />
                 <span className="flex min-w-0 flex-1 flex-col leading-tight">
-                  <span className="truncate font-semibold">{kid.displayName}</span>
-                  {kid.stat ? <span className="truncate text-sm text-muted-foreground">{kid.stat}</span> : null}
+                  <span className="truncate text-sm font-semibold">{kid.displayName}</span>
+                  {kid.stat ? <span className="truncate text-xs text-muted-foreground">{kid.stat}</span> : null}
                 </span>
                 {kid.badge ? (
-                  <span className="shrink-0 rounded-full bg-warning/25 px-2 py-0.5 text-xs font-bold text-foreground">
+                  <span className="shrink-0 rounded-md bg-warning/18 px-1.5 py-0.5 text-[0.6875rem] font-semibold">
                     {kid.badge}
                   </span>
                 ) : null}

@@ -34,7 +34,8 @@ test("un adulto acepta una regla, genera preparativos y conserva los recordatori
   await page.getByRole("button", { name: "Guardar evento" }).click();
   await expect(page).toHaveURL(/\/agenda$/);
   await page.goto(`/agenda?desde=${day}&dias=1`);
-  await page.getByRole("link").filter({ hasText: title }).click();
+  // Con teclado: la grilla del día se desplaza al cargar y un clic podría caer en otra hora.
+  await page.getByRole("link").filter({ hasText: title }).press("Enter");
   await expect(page.getByRole("button", { name, exact: true })).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByRole("button", { name: "30 min antes", exact: true })).toHaveAttribute("aria-pressed", "true");
   const eventUrl = page.url();
@@ -45,7 +46,7 @@ test("un adulto acepta una regla, genera preparativos y conserva los recordatori
   await expect(page.getByLabel("Empieza")).toHaveValue("18:00");
   await expect(page.getByRole("button", { name, exact: true })).toHaveAttribute("aria-pressed", "true");
   await page.goto("/casa");
-  await page.getByRole("link").filter({ hasText: "Mateo" }).first().click();
+  await page.getByRole("region", { name: "Hijos hoy" }).getByRole("link", { name: /Mateo/ }).click();
   await expect(page.getByRole("region", { name: "Mis tareas de hoy" }).getByText(task, { exact: true })).toBeVisible();
   expect(problems, problems.join("\n")).toEqual([]);
 });

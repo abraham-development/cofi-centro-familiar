@@ -55,7 +55,8 @@ test("Tareas: la barra lateral abre la vista centrada en cada hijo", async ({ pa
   await expect(page.getByRole("heading", { name: "Mateo", level: 2, exact: true })).toBeVisible();
   const today = page.getByRole("region", { name: "Hoy" });
   await expect(today.getByText("Tender la cama")).toBeVisible();
-  await expect(today.getByText("Cumplida").first()).toBeVisible();
+  // El estado depende del día (la semilla es de otro día): basta con que se muestre.
+  await expect(today.getByText(/^(Pendiente|Vencida|Por corregir|Cumplida|Cumplida tarde|Exenta)$|revisión/).first()).toBeVisible();
   const review = page.getByRole("region", { name: reviewCount ? `Por revisar (${reviewCount})` : "Por revisar", exact: true });
   await expect(review).toBeVisible();
   if (reviewCount) await expect(review.getByRole("button", { name: /Aprobar/ })).toHaveCount(reviewCount);
@@ -118,6 +119,7 @@ test("las pantallas vinculadas muestran «Hijos» con el nombre del hijo y «Cas
   await pair(mama, room, "child", "Cuarto de Mateo (E2E 08)");
   const childBadge = room.locator('[data-world="child"]');
   await expect(childBadge).toContainText("Mateo");
+  await room.screenshot({ path: "docs/capturas/pantalla-hijo.png" });
   await expect(childBadge).toContainText("Hijos");
   await expect(room.locator('[data-world="parents"]')).toHaveCount(0);
 
@@ -125,6 +127,7 @@ test("las pantallas vinculadas muestran «Hijos» con el nombre del hijo y «Cas
   const homeBadge = kitchen.locator('[data-world="home"]');
   await expect(homeBadge).toContainText("Cocina (E2E 08)");
   await expect(homeBadge).toContainText("Casa");
+  await kitchen.screenshot({ path: "docs/capturas/pantalla-cocina.png" });
 
   // Desvincular al terminar para no dejar pantallas de prueba activas.
   await mama.goto("/configuracion/dispositivos");
@@ -155,5 +158,28 @@ test("en el celular la barra lateral es una fila de chips sin desbordes", async 
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow, "vista del hijo desborda").toBeLessThanOrEqual(0);
   await page.screenshot({ path: "docs/capturas/tareas-hijo-movil.png", fullPage: true });
+  await ctx.close();
+});
+
+test("el menú del usuario cambia entre tema claro, oscuro y el del equipo", async ({ browser }) => {
+  const ctx = await browser.newContext({ colorScheme: "dark" });
+  const page = await ctx.newPage();
+  await login(page, "MAMA");
+  const html = page.locator("html");
+  const choose = async (name: string) => {
+    await page.getByRole("button", { name: /Menú de Mamá/ }).click();
+    await page.getByRole("menuitemradio", { name }).click();
+  };
+  await choose("Claro");
+  await expect(html).not.toHaveClass(/\bdark\b/);
+  await choose("Oscuro");
+  await expect(html).toHaveClass(/\bdark\b/);
+  await page.reload();
+  await expect(html).toHaveClass(/\bdark\b/);
+  await choose("Claro");
+  await expect(html).not.toHaveClass(/\bdark\b/);
+  // «Según el equipo» sigue al sistema (aquí, oscuro).
+  await choose("Según el equipo");
+  await expect(html).toHaveClass(/\bdark\b/);
   await ctx.close();
 });

@@ -72,9 +72,9 @@ export function DevicesManager({
   const revoked = devices.filter((d) => d.revokedAt);
 
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
-      <form onSubmit={approve} className="flex flex-col gap-5 rounded-3xl border bg-card p-5 shadow-sm sm:p-6">
-        <h2 className="text-2xl font-bold">Vincular otro equipo por código</h2>
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <form onSubmit={approve} className="flex flex-col gap-5 rounded-2xl border bg-card p-5">
+        <h2 className="text-base font-semibold">Vincular otro equipo por código</h2>
         <ol className="list-decimal space-y-1 pl-5 text-muted-foreground">
           <li>
             En la tablet o pantalla, abre <strong className="text-foreground">/vincular</strong> y toca «Generar código».
@@ -107,7 +107,7 @@ export function DevicesManager({
               aria-checked={scope === "home"}
               onClick={() => setScope("home")}
               className={cn(
-                "flex min-h-11 items-center gap-2 rounded-xl border-2 px-4 font-semibold",
+                "flex min-h-10 items-center gap-2 rounded-lg border px-4 text-sm font-medium pointer-coarse:min-h-11",
                 scope === "home" ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted",
               )}
             >
@@ -120,7 +120,7 @@ export function DevicesManager({
               onClick={() => setScope("child")}
               disabled={kids.length === 0}
               className={cn(
-                "flex min-h-11 items-center gap-2 rounded-xl border-2 px-4 font-semibold disabled:opacity-50",
+                "flex min-h-10 items-center gap-2 rounded-lg border px-4 text-sm font-medium pointer-coarse:min-h-11 disabled:opacity-50",
                 scope === "child" ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted",
               )}
             >
@@ -146,7 +146,7 @@ export function DevicesManager({
                   if (!name) setName(`Cuarto de ${c.displayName}`);
                 }}
                 className={cn(
-                  "flex min-h-11 items-center gap-2 rounded-full border-2 py-1 pr-4 pl-1 font-semibold",
+                  "flex min-h-10 items-center gap-2 rounded-lg border py-1 pr-3 pl-1 text-sm font-medium pointer-coarse:min-h-11",
                   memberId !== c.id && "hover:bg-muted",
                 )}
                 style={memberId === c.id ? { borderColor: c.color, backgroundColor: `${c.color}1f` } : undefined}
@@ -172,8 +172,8 @@ export function DevicesManager({
         </Button>
       </form>
 
-      <section className="flex flex-col gap-4 rounded-3xl border bg-card p-5 shadow-sm sm:p-6" aria-labelledby="pantallas-activas">
-        <h2 id="pantallas-activas" className="text-2xl font-bold">
+      <section className="flex flex-col gap-4 rounded-2xl border bg-card p-5" aria-labelledby="pantallas-activas">
+        <h2 id="pantallas-activas" className="text-base font-semibold">
           Pantallas vinculadas
         </h2>
         {active.length === 0 ? <p className="text-muted-foreground">Aún no hay pantallas vinculadas.</p> : null}
@@ -181,10 +181,10 @@ export function DevicesManager({
           {active.map((d) => {
             const child = d.memberId ? byId.get(d.memberId) : undefined;
             return (
-              <li key={d.id} className="flex flex-wrap items-center gap-3 rounded-2xl border p-3">
+              <li key={d.id} className="flex flex-wrap items-center gap-3 rounded-xl border p-3">
                 {child ? <MemberAvatar member={child} size="lg" /> : <House aria-hidden className="size-10 text-muted-foreground" />}
                 <div className="min-w-0 flex-1">
-                  <p className="text-lg font-semibold">{d.name}</p>
+                  <p className="font-semibold">{d.name}</p>
                   <p className="text-sm text-muted-foreground">
                     {d.scope === "home" ? "Zona común" : `Cuarto de ${child?.displayName ?? "un hijo"}`} ·{" "}
                     {d.lastSeenAt ? `activa ${formatShortDate(d.lastSeenAt.slice(0, 10))}` : "sin actividad aún"}
@@ -207,7 +207,7 @@ export function DevicesManager({
           })}
         </ul>
         {revoked.length > 0 ? (
-          <details className="rounded-2xl border p-3">
+          <details className="rounded-xl border p-3">
             <summary className="cursor-pointer font-semibold">Desvinculadas ({revoked.length})</summary>
             <ul className="mt-2 flex flex-col gap-1 text-muted-foreground">
               {revoked.map((d) => (

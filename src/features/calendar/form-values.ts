@@ -2,8 +2,21 @@ import type { EventDetail } from "./queries";
 import type { EventFormValues } from "./schemas";
 import { addDays, instantToLocalParts, zonedFromEpoch } from "@/lib/time/zoned";
 
-/** Valores iniciales de un evento nuevo: próxima hora en punto, 1 h de duración. */
-export function newEventDefaults(date: string, nowMs: number, timeZone: string, isToday: boolean): EventFormValues {
+/** Avisos marcados al agendar algo nuevo (decisión del usuario: 1 h y 15 min antes). */
+export const DEFAULT_REMINDER_OFFSETS: EventFormValues["reminderOffsets"] = [15, 60];
+
+/**
+ * Valores iniciales de un evento nuevo: próxima hora en punto, 1 h de duración.
+ * Con `startTime` (elegida en la grilla del día) no se propone fin: lo esencial
+ * es a qué hora empieza.
+ */
+export function newEventDefaults(
+  date: string,
+  nowMs: number,
+  timeZone: string,
+  isToday: boolean,
+  startTime?: string,
+): EventFormValues {
   const zdt = zonedFromEpoch(nowMs, timeZone);
   const hour = isToday ? Math.min(zdt.hour + 1, 23) : 9;
   const start = `${String(hour).padStart(2, "0")}:00`;
@@ -14,8 +27,8 @@ export function newEventDefaults(date: string, nowMs: number, timeZone: string, 
     isAllDay: false,
     date,
     endDate: null,
-    startTime: start,
-    endTime: end,
+    startTime: startTime ?? start,
+    endTime: startTime ? null : end,
     wholeFamily: false,
     participantIds: [],
     visibility: "family",
@@ -23,7 +36,7 @@ export function newEventDefaults(date: string, nowMs: number, timeZone: string, 
     location: "",
     description: "",
     privateNotes: "",
-    reminderOffsets: [],
+    reminderOffsets: [...DEFAULT_REMINDER_OFFSETS],
     ruleIds: [],
   };
 }

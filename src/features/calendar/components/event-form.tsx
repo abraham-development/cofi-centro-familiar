@@ -18,6 +18,7 @@ import {
   splitEventSeriesAction,
   updateEventAction,
 } from "../actions";
+import { takeAgendaDraft } from "../draft";
 import { type EventFormValues, eventFormSchema, NO_REPEAT, type RepeatValues } from "../schemas";
 import type { CategorySummary, MemberSummary } from "../types";
 import { CategoryIcon } from "@/components/category-icon";
@@ -65,6 +66,8 @@ export type EventFormProps = {
   splitSeries?: { seriesId: string; from: string };
   /** Reglas de preparativos disponibles (activas). */
   rules?: { id: string; name: string; kind: "visit_prep" | "school_prep" }[];
+  /** Recupera lo escrito en la ventana rápida de la agenda («Más opciones»). */
+  restoreDraft?: boolean;
 };
 
 const REMINDER_OPTIONS = [
@@ -99,6 +102,7 @@ export function EventForm({
   occurrenceOf,
   splitSeries,
   rules = [],
+  restoreDraft,
 }: EventFormProps) {
   const router = useRouter();
   const online = useOnlineStatus();
@@ -140,6 +144,16 @@ export function EventForm({
     const duration = (ch * 60 + cm - (ph * 60 + pm) + 24 * 60) % (24 * 60) || 60;
     setValue("endTime", addMinutes(startTime, duration));
   }, [startTime, setValue, form]);
+
+  useEffect(() => {
+    if (!restoreDraft) return;
+    const draft = takeAgendaDraft();
+    if (!draft) return;
+    setValue("title", draft.title, { shouldDirty: true });
+    setValue("endTime", draft.endTime);
+    setValue("participantIds", draft.participantIds);
+    setValue("reminderOffsets", draft.reminderOffsets);
+  }, [restoreDraft, setValue]);
 
   // Aviso de solapamientos (informativo, con espera para no consultar en cada tecla).
   useEffect(() => {
@@ -281,12 +295,12 @@ export function EventForm({
 
       <FieldGroup>
         <Field data-invalid={!!errors.title}>
-          <FieldLabel htmlFor="title" className="text-lg">
+          <FieldLabel htmlFor="title" className="text-[0.95rem]">
             ¿Qué es?
           </FieldLabel>
           <Input
             id="title"
-            className="h-14 text-xl"
+            className="h-12 text-lg"
             placeholder="Ej.: Visita de la tía Carmen"
             maxLength={120}
             aria-invalid={!!errors.title}
@@ -312,7 +326,7 @@ export function EventForm({
                       aria-checked={selected}
                       onClick={() => field.onChange(selected ? null : cat.id)}
                       className={cn(
-                        "flex min-h-11 items-center gap-2 rounded-xl border-2 px-3 font-semibold transition-colors",
+                        "flex min-h-10 items-center gap-2 rounded-lg border px-3 text-sm font-medium pointer-coarse:min-h-11 transition-colors",
                         selected ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted",
                       )}
                     >
@@ -398,7 +412,7 @@ export function EventForm({
                   aria-checked={repeat.freq === opt.value}
                   onClick={() => setRepeat((r) => ({ ...r, freq: opt.value }))}
                   className={cn(
-                    "min-h-11 rounded-xl border-2 px-3 font-semibold",
+                    "min-h-10 rounded-lg border px-3 text-sm font-medium pointer-coarse:min-h-11",
                     repeat.freq === opt.value ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted",
                   )}
                 >
@@ -423,7 +437,7 @@ export function EventForm({
                         }))
                       }
                       className={cn(
-                        "size-12 rounded-xl border-2 font-semibold capitalize",
+                        "size-10 rounded-lg border text-sm font-medium capitalize pointer-coarse:size-11",
                         selected ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted",
                       )}
                     >
@@ -478,7 +492,7 @@ export function EventForm({
                   aria-pressed={field.value}
                   onClick={() => field.onChange(!field.value)}
                   className={cn(
-                    "flex min-h-11 items-center gap-2 rounded-full border-2 px-4 font-semibold",
+                    "flex min-h-10 items-center gap-2 rounded-lg border px-4 text-sm font-medium pointer-coarse:min-h-11",
                     !field.value && "hover:bg-muted",
                   )}
                   style={
@@ -508,7 +522,7 @@ export function EventForm({
                           field.onChange(selected ? field.value.filter((id) => id !== m.id) : [...field.value, m.id])
                         }
                         className={cn(
-                          "flex min-h-11 items-center gap-2 rounded-full border-2 py-1 pr-4 pl-1 font-semibold transition-colors disabled:opacity-50",
+                          "flex min-h-10 items-center gap-2 rounded-lg border py-1 pr-3 pl-1 text-sm font-medium pointer-coarse:min-h-11 transition-colors disabled:opacity-50",
                           !selected && "hover:bg-muted",
                         )}
                         style={selected ? { borderColor: m.color, backgroundColor: `${m.color}1f` } : undefined}
@@ -552,7 +566,7 @@ export function EventForm({
                       aria-checked={selected}
                       onClick={() => field.onChange(opt.value)}
                       className={cn(
-                        "flex flex-col items-start gap-0.5 rounded-xl border-2 p-3 text-left",
+                        "flex flex-col items-start gap-0.5 rounded-lg border p-3 text-left",
                         selected ? "border-primary bg-primary/5" : "hover:bg-muted",
                       )}
                     >
@@ -592,7 +606,7 @@ export function EventForm({
                         )
                       }
                       className={cn(
-                        "min-h-11 rounded-xl border-2 px-3 font-semibold",
+                        "min-h-10 rounded-lg border px-3 text-sm font-medium pointer-coarse:min-h-11",
                         selected ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted",
                       )}
                     >
@@ -629,7 +643,7 @@ export function EventForm({
                           field.onChange(selected ? field.value.filter((id) => id !== rule.id) : [...field.value, rule.id])
                         }
                         className={cn(
-                          "min-h-11 rounded-xl border-2 px-3 font-semibold",
+                          "min-h-10 rounded-lg border px-3 text-sm font-medium pointer-coarse:min-h-11",
                           selected ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted",
                         )}
                       >

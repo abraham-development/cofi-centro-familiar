@@ -2,7 +2,6 @@ import { House } from "lucide-react";
 import { cn } from "cn";
 
 import { MemberAvatar } from "@/components/member-chip";
-import { readableTextColor } from "@/lib/colors";
 
 export type World = "parents" | "child" | "home";
 
@@ -44,29 +43,26 @@ export function IdentityBadge({
     <span
       data-world={world}
       title={detail ? `${label} · ${detail}` : label}
-      className="inline-flex min-h-11 items-center gap-2 rounded-full border bg-card py-1 pr-1 pl-1 sm:pr-1.5"
+      className="inline-flex min-h-10 items-center gap-2.5 rounded-xl border bg-card py-1 pr-1 pl-1 pointer-coarse:min-h-11 sm:pr-3"
     >
       <span className="sr-only">{detail ? `${label} (${detail})` : label}</span>
       {avatar ? (
         <MemberAvatar member={avatar} size="sm" className="ring-0" />
       ) : (
-        <span aria-hidden className="grid size-7 place-items-center rounded-full bg-highlight text-highlight-foreground">
+        <span aria-hidden className="grid size-7 place-items-center rounded-lg bg-muted text-foreground">
           <House className="size-4" />
         </span>
       )}
-      <span aria-hidden className="hidden max-w-36 truncate font-semibold sm:inline">
-        {name}
-      </span>
-      <span
-        aria-hidden
-        className={cn(
-          "hidden rounded-full px-2.5 py-0.5 text-xs font-bold tracking-wide uppercase sm:inline",
-          world === "parents" && "bg-primary text-primary-foreground",
-          world === "home" && "bg-highlight text-highlight-foreground",
-        )}
-        style={world === "child" ? { backgroundColor: childColor, color: readableTextColor(childColor) } : undefined}
-      >
-        {WORLD_LABEL[world]}
+      <span aria-hidden className="hidden min-w-0 flex-col leading-tight sm:flex">
+        <span className="max-w-36 truncate text-sm font-semibold">{name}</span>
+        <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <span
+            className={cn("size-1.5 rounded-full", world === "parents" && "bg-brand", world === "home" && "bg-highlight")}
+            style={world === "child" ? { backgroundColor: childColor } : undefined}
+          />
+          {WORLD_LABEL[world]}
+          {detail ? <span className="hidden lg:inline">· {detail}</span> : null}
+        </span>
       </span>
     </span>
   );

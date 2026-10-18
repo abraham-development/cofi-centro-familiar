@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, ChevronDown, LogOut, Moon, Sun, Users } from "lucide-react";
+import { Check, ChevronDown, LogOut, Monitor, Moon, Sun, Users } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useTransition } from "react";
 import { toast } from "sonner";
@@ -13,6 +13,8 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -38,7 +40,7 @@ export function UserMenu({
   /** En celulares, el avatar del adulto es el botón del menú (indica quién está conectado). */
   avatar: { displayName: string; color: string; initials: string; avatarEmoji: string | null } | null;
 }) {
-  const { resolvedTheme, setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const [pending, startTransition] = useTransition();
 
   function switchTo(id: string) {
@@ -53,7 +55,7 @@ export function UserMenu({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        render={<Button variant="ghost" className="max-w-56 px-2.5 sm:px-4" disabled={pending} aria-label={`Menú de ${displayName ? `${displayName} · ` : ""}${familyName}`} />}
+        render={<Button variant="ghost" className="max-w-56 px-2 sm:px-3" disabled={pending} aria-label={`Menú de ${displayName ? `${displayName} · ` : ""}${familyName}`} />}
       >
         {avatar ? (
           <span className="sm:hidden">
@@ -94,10 +96,21 @@ export function UserMenu({
           </>
         ) : null}
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>
-          {resolvedTheme === "dark" ? <Sun aria-hidden /> : <Moon aria-hidden />}
-          {resolvedTheme === "dark" ? "Modo claro" : "Modo nocturno"}
-        </DropdownMenuItem>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>Tema</DropdownMenuLabel>
+          <DropdownMenuRadioGroup value={theme ?? "system"} onValueChange={(value) => setTheme(value as string)}>
+            <DropdownMenuRadioItem value="light" closeOnClick>
+              <Sun aria-hidden /> Claro
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="dark" closeOnClick>
+              <Moon aria-hidden /> Oscuro
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="system" closeOnClick>
+              <Monitor aria-hidden /> Según el equipo
+            </DropdownMenuRadioItem>
+          </DropdownMenuRadioGroup>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => { clearSnapshot("adult"); startTransition(() => signOutAction()); }}>
           <LogOut aria-hidden /> Cerrar sesión
         </DropdownMenuItem>

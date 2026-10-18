@@ -92,6 +92,27 @@ Build `01a14ae0-18ff-7374-8223-6fd497974ad4` completado en el mismo Web App, sin
 
 Verificados por HTTPS ambos modos de configuración desde el propio equipo, acceso dirigido, cierre adulto en ese navegador y otra pestaña, permisos, regreso automático y revocación. Informe en [`verificacion-vinculacion.json`](verificacion-vinculacion.json), instrucciones en [pantallas](pantallas.md). No se aplicaron migraciones ni se ejecutaron semillas.
 
+## Mundos y seguimiento por hijo, 17 oct 2026
+
+- **Build:** `01a14b0d-43f1-7064-a2ac-f6be61f9a687`, completado a las 13:11 Lima en el mismo Web App. No se cambiaron variables ni se crearon recursos.
+- **Archivo:** `COFI_20261017_130816.zip`, 206 archivos (los 203 anteriores más `identity-badge.tsx`, `children-sidebar.tsx` y `child-task-history.tsx`), SHA-256 `9aca522ed58b6e1c1fd8ef1480667525d15271a2f1b2cf349aefcda5819573f0`. Se creó sin entradas de carpeta (`zip -D`), con la misma lista que el anterior. Sin credenciales ni artefactos de build, y con `removeArchive: false`.
+- **Verificación:** diez comprobaciones públicas de solo lectura, en [`verificacion-mundos.json`](verificacion-mundos.json). No se aplicaron migraciones.
+- **Datos:** antes de publicar se ejecutó `npm run e2e`, que recreó las familias ficticias en el Supabase compartido.
+
+## Agenda visual y «Pendientes de hoy», 17 oct 2026
+
+- **Build:** `01a14b7b-412a-70d5-a97b-5bdfb09e640c`, completado a las 15:11 Lima en el mismo Web App. No se cambiaron variables ni se crearon recursos.
+- **Archivo:** `COFI_20261017_150836.zip`, 210 archivos, SHA-256 `7b0ae33611d5d232ce6ad9522cf478ab2ae7d24073b7859ff6a37682dd225396`. Respecto al anterior entran `day-planner.tsx`, `mini-month.tsx`, `quick-schedule-dialog.tsx`, `day-layout.ts` y `draft.ts`, y sale `month-grid.tsx`. Se publicó con `removeArchive: false`.
+- **Verificación:** doce comprobaciones públicas de solo lectura, en [`verificacion-agenda.json`](verificacion-agenda.json). Sin migraciones y sin ejecutar la semilla.
+
+## Rediseño visual, 18 oct 2026
+
+- **Build:** `01a14f28-0d28-703e-8696-db7a055ac7dc`, completado a las 08:18 Lima en el mismo Web App. No se cambiaron variables ni se crearon recursos.
+- **Archivo:** `COFI_20261018_081610.zip`, 214 archivos y SHA-256 `5fd6ab5b40482e6e748a2065d53728c7fba613a8c67a984ed052684a74041505`. Solo fuentes, sin credenciales; se publicó con `removeArchive: false`.
+- **Verificación:** doce comprobaciones públicas en [`verificacion-rediseno.json`](verificacion-rediseno.json).
+- **Datos:** antes de publicar, con permiso del usuario, se reinició la demostración para ejecutar la E2E completa (41/41).
+- `next.config.js` desactiva la caché en disco de Turbopack para `next dev`; el build de Hostinger no cambia.
+
 ## Hito C: cron y PWA
 
 - La migración `20261017141953_reminders_automations.sql` está aplicada en desarrollo. Se verificaron activos `cofi-process-reminders` y `cofi-dispatch-push` (cada minuto), `cofi-extend-horizons` y `cofi-cleanup-anonymous`.

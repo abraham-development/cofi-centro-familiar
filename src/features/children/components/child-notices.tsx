@@ -1,9 +1,9 @@
 "use client";
 
-import { Megaphone } from "lucide-react";
 
 import { CategoryIcon } from "@/components/category-icon";
 import { useClock } from "@/components/clock/clock-provider";
+import { Panel } from "@/components/panel";
 import { eventTimeLabel } from "@/features/calendar/components/event-time-label";
 import type { AgendaEvent } from "@/features/calendar/types";
 import { addDays, epochFromIso, localDateOf, relativeDayLabel } from "@/lib/time/zoned";
@@ -24,22 +24,19 @@ export function ChildNotices({ events }: { events: AgendaEvent[] }) {
     .sort((a, b) => (a.importance === b.importance ? 0 : a.importance === "high" ? -1 : 1));
   if (items.length === 0) return null;
   return (
-    <section aria-labelledby="avisos-hijo" className="flex flex-col gap-3 rounded-3xl border bg-card/60 p-5 shadow-sm sm:p-6">
-      <h2 id="avisos-hijo" className="flex items-center gap-2 text-3xl font-bold">
-        <Megaphone aria-hidden className="size-7" /> Avisos
-      </h2>
+    <Panel id="avisos-hijo" size="lg" title="Avisos" caption="Lo que viene hoy y mañana">
       <ul className="flex flex-col gap-3">
         {items.map((e) => (
-          <li key={e.id} className={e.importance === "high" ? "rounded-2xl bg-highlight/40 p-4" : "rounded-2xl border p-4"}>
-            <p className="flex items-center gap-2 text-lg font-semibold">
+          <li key={e.id} className={e.importance === "high" ? "rounded-xl border-l-4 border-warning bg-warning/10 p-4" : "rounded-xl bg-muted/60 p-4"}>
+            <p className="flex items-center gap-2 text-base font-medium text-muted-foreground">
               <CategoryIcon icon={e.category?.icon} className="size-5" />
               {relativeDayLabel(e.localStartDate < today ? today : e.localStartDate, today)} · {eventTimeLabel(e, timeZone, hourFormat)}
             </p>
-            <p className="text-2xl font-bold">{e.title}</p>
+            <p className="mt-1 text-2xl font-semibold">{e.title}</p>
             {e.description ? <p className="mt-1 text-xl">{e.description}</p> : null}
           </li>
         ))}
       </ul>
-    </section>
+    </Panel>
   );
 }

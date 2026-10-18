@@ -32,6 +32,6 @@ async function Setup() {
 export default function CurrentDevicePage() {
   return <div className="flex flex-col gap-6">
     <PageHeader title="Configurar este dispositivo como pantalla" description="Prepara esta tablet o celular para la familia o para uno de tus hijos." />
-    <Suspense fallback={<Skeleton className="mx-auto h-96 w-full max-w-xl rounded-3xl" />}><Setup /></Suspense>
+    <Suspense fallback={<Skeleton className="mx-auto h-96 w-full max-w-xl rounded-2xl" />}><Setup /></Suspense>
   </div>;
 }

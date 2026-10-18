@@ -8,7 +8,7 @@ import { cn } from "cn";
 const LINKS = [
   { href: "/casa", label: "Casa", icon: House },
   { href: "/agenda", label: "Agenda", icon: CalendarDays },
-  { href: "/pendientes", label: "Pendientes", icon: ClipboardList },
+  { href: "/pendientes", label: "Pendientes de hoy", icon: ClipboardList },
   { href: "/responsabilidades", label: "Tareas", icon: ListChecks },
   { href: "/premios", label: "Premios", icon: Gift },
   { href: "/configuracion", label: "Ajustes", icon: Settings },
@@ -24,7 +24,7 @@ export function AppNav() {
 export function AppNavLinks({ pathname }: { pathname: string | null }) {
   return (
     <nav aria-label="Principal">
-      <ul className="flex gap-0.5 sm:gap-1">
+      <ul className="flex gap-0.5 rounded-xl border bg-card p-1">
         {LINKS.map(({ href, label, icon: Icon }) => {
           const active = !!pathname && (pathname === href || pathname.startsWith(`${href}/`));
           return (
@@ -33,11 +33,13 @@ export function AppNavLinks({ pathname }: { pathname: string | null }) {
                 href={href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-xl px-2.5 font-semibold transition-colors",
-                  active ? "bg-primary text-primary-foreground" : "hover:bg-muted",
+                  "flex h-9 min-w-9 items-center justify-center gap-2 rounded-lg px-2 text-sm transition-colors pointer-coarse:h-11 pointer-coarse:min-w-11 xl:px-3",
+                  active
+                    ? "bg-muted font-semibold text-foreground shadow-[inset_0_0_0_1px_var(--border)]"
+                    : "font-medium text-muted-foreground hover:bg-muted/60 hover:text-foreground",
                 )}
               >
-                <Icon aria-hidden className="size-5" />
+                <Icon aria-hidden className={cn("size-[1.125rem]", active && "text-brand-strong")} />
                 <span className="hidden xl:inline">{label}</span>
                 <span className="sr-only xl:hidden">{label}</span>
               </Link>

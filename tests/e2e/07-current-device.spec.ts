@@ -84,7 +84,7 @@ test("pantalla de un hijo: selección obligatoria y recuperación de un fallo al
   await expect.poll(() => page.evaluate(() => Boolean(localStorage.getItem("cofi-snapshot-v1:adult")))).toBe(true);
   const otherTab = await page.context().newPage();
   await otherTab.goto("/casa");
-  await expect(otherTab.getByRole("heading", { name: "Pendientes de la casa" })).toBeVisible();
+  await expect(otherTab.getByRole("heading", { name: "Pendientes de hoy" })).toBeVisible();
   await page.goto("/configuracion/dispositivos");
   await page.getByRole("link", { name: "Configurar este dispositivo como pantalla" }).click();
   await page.getByRole("radio", { name: "Pantalla de un hijo", exact: true }).click();

@@ -56,10 +56,10 @@ export function RedemptionsQueue({
         const member = members.get(r.memberId);
         const enough = (balances[r.memberId] ?? 0) >= r.cost;
         return (
-          <li key={r.id} className="flex flex-wrap items-center gap-3 rounded-2xl border bg-card p-3">
+          <li key={r.id} className="flex flex-wrap items-center gap-3 rounded-xl border bg-card p-3">
             {member ? <MemberAvatar member={member} size="lg" /> : null}
             <div className="min-w-0 flex-1">
-              <p className="text-lg font-semibold">{r.rewardTitle}</p>
+              <p className="font-semibold">{r.rewardTitle}</p>
               <p className="text-sm text-muted-foreground">
                 {member?.displayName} · {r.cost} pts · {STATUS_LABEL[r.status]}
                 {r.status === "requested" && !enough ? " · saldo insuficiente ahora" : ""}

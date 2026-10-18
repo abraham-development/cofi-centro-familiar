@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Figtree, Geist_Mono } from "next/font/google";
+import { Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import { Suspense } from "react";
 
 import { PwaRuntime } from "@/components/pwa/pwa-runtime";
@@ -8,8 +8,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
-const figtree = Figtree({
-  variable: "--font-figtree",
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin", "latin-ext"],
 });
 
@@ -29,16 +29,16 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#FAF8F3" },
-    { media: "(prefers-color-scheme: dark)", color: "#1A1D24" },
+    { media: "(prefers-color-scheme: light)", color: "#F3F3F1" },
+    { media: "(prefers-color-scheme: dark)", color: "#0B0B10" },
   ],
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="es" suppressHydrationWarning className={`${figtree.variable} ${geistMono.variable} h-full antialiased`}>
+    <html lang="es" suppressHydrationWarning className={`${jakarta.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <Suspense fallback={null}><PwaRuntime /></Suspense>
           <TooltipProvider>{children}</TooltipProvider>
           <Toaster position="top-center" richColors closeButton />

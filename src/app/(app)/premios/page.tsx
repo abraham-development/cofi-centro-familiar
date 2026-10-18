@@ -1,8 +1,11 @@
-import { Gift } from "lucide-react";
+import { ArrowDownLeft, ArrowUpRight, Gift } from "lucide-react";
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { cn } from "cn";
 
+import { Meter } from "@/components/meter";
 import { PageHeader } from "@/components/page-header";
+import { Panel } from "@/components/panel";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { MemberSummary } from "@/features/calendar/types";
 import { ChildrenSidebar, resolveSelectedKid } from "@/features/children/components/children-sidebar";
@@ -42,28 +45,37 @@ const REDEMPTION_LABEL: Record<Redemption["status"], string> = {
 
 function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
-    <section aria-labelledby={id} className="flex flex-col gap-4 rounded-3xl border bg-card p-5 shadow-sm sm:p-6">
-      <h2 id={id} className="text-2xl font-bold">
-        {title}
-      </h2>
+    <Panel id={id} title={title}>
       {children}
-    </section>
+    </Panel>
   );
 }
 
 function LedgerList({ ledger, byId, showMember }: { ledger: LedgerEntry[]; byId: Map<string, MemberSummary>; showMember: boolean }) {
   if (ledger.length === 0) return <p className="text-muted-foreground">Todavía no hay movimientos.</p>;
   return (
-    <ul className="flex flex-col divide-y">
+    <ul className="flex flex-col gap-1">
       {ledger.map((e) => (
-        <li key={e.id} className="flex items-center gap-3 py-2">
-          <span className="w-16 shrink-0 text-sm text-muted-foreground">{formatShortDate(e.createdAt.slice(0, 10))}</span>
-          <span className="min-w-0 flex-1 truncate">
-            {showMember ? <span className="font-semibold">{byId.get(e.memberId)?.displayName} · </span> : null}
-            {KIND_LABEL[e.kind] ?? e.kind}
-            {e.reason ? ` · ${e.reason}` : ""}
+        <li key={e.id} className="flex items-center gap-3 py-1.5">
+          <span
+            className={cn(
+              "grid size-9 shrink-0 place-items-center rounded-lg",
+              e.amount > 0 ? "bg-brand-soft text-brand-strong" : "bg-muted text-muted-foreground",
+            )}
+          >
+            {e.amount > 0 ? <ArrowDownLeft aria-hidden className="size-4" /> : <ArrowUpRight aria-hidden className="size-4" />}
           </span>
-          <span className={e.amount > 0 ? "font-bold text-success" : "font-bold"}>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold">
+              {showMember ? `${byId.get(e.memberId)?.displayName} · ` : ""}
+              {KIND_LABEL[e.kind] ?? e.kind}
+            </p>
+            <p className="truncate text-xs text-muted-foreground">
+              {formatShortDate(e.createdAt.slice(0, 10))}
+              {e.reason ? ` · ${e.reason}` : ""}
+            </p>
+          </div>
+          <span className={cn("text-sm font-semibold tabular-nums", e.amount > 0 && "text-success")}>
             {e.amount > 0 ? `+${e.amount}` : e.amount}
           </span>
         </li>
@@ -102,14 +114,14 @@ async function Rewards({ searchParams }: { searchParams: PageProps<"/premios">["
   const totalRequests = openRedemptions.filter((r) => r.status === "requested").length;
 
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[16rem_minmax(0,1fr)]">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-[16rem_minmax(0,1fr)]">
       <ChildrenSidebar
         kids={sidebarKids}
         selectedId={selected?.id ?? null}
         basePath="/premios"
         allStat={totalRequests ? `${totalRequests} por aprobar` : undefined}
       />
-      <div className="flex min-w-0 flex-col gap-6">
+      <div className="flex min-w-0 flex-col gap-4">
         {selected ? (
           <ChildRewardsFocus
             kid={selected}
@@ -122,8 +134,8 @@ async function Rewards({ searchParams }: { searchParams: PageProps<"/premios">["
             byId={byId}
           />
         ) : (
-          <div className="grid grid-cols-1 gap-6 2xl:grid-cols-2">
-            <div className="flex flex-col gap-6">
+          <div className="grid grid-cols-1 gap-4 2xl:grid-cols-2">
+            <div className="flex flex-col gap-4">
               <Section id="saldos" title="Saldos">
                 {kids.length ? (
                   <BalancesPanel kids={kids} balances={balanceRecord} />
@@ -135,7 +147,7 @@ async function Rewards({ searchParams }: { searchParams: PageProps<"/premios">["
                 <RedemptionsQueue redemptions={openRedemptions} members={byId} balances={balanceRecord} />
               </Section>
             </div>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
               <Section id="catalogo" title="Catálogo de premios">
                 <RewardsManager rewards={rewards} kids={kids} />
               </Section>
@@ -176,15 +188,16 @@ function ChildRewardsFocus({
   const spent = ledger.filter((e) => e.amount < 0).reduce((sum, e) => sum - e.amount, 0);
   return (
     <>
-      <div className="rounded-3xl border-2 bg-card p-5 shadow-sm" style={{ borderColor: kid.color }}>
+      <div className="rounded-2xl border border-l-4 bg-card p-5" style={{ borderLeftColor: kid.color }}>
         <BalancesPanel kids={[kid]} balances={{ [kid.id]: balance }} />
-        <p className="mt-3 text-muted-foreground">
-          En los movimientos recientes: ganó {earned} pts y usó {spent} pts.
+        <p className="mt-3 text-sm text-muted-foreground">
+          En los movimientos recientes: ganó <span className="font-semibold text-foreground">{earned} pts</span> y usó{" "}
+          <span className="font-semibold text-foreground">{spent} pts</span>.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 2xl:grid-cols-2">
-        <div className="flex flex-col gap-6">
+      <div className="grid grid-cols-1 gap-4 2xl:grid-cols-2">
+        <div className="flex flex-col gap-4">
           <Section id="canjes-hijo" title="Pedidos pendientes">
             <RedemptionsQueue redemptions={open} members={byId} balances={balanceRecord} />
           </Section>
@@ -192,42 +205,58 @@ function ChildRewardsFocus({
             {available.length === 0 ? (
               <p className="text-muted-foreground">No hay premios disponibles para {kid.displayName}.</p>
             ) : (
-              <ul className="flex flex-col gap-2">
+              <ul className="flex flex-col gap-3">
                 {available.map((r) => (
-                  <li key={r.id} className="flex items-center gap-3 rounded-2xl border p-3">
-                    <Gift aria-hidden className="size-5 shrink-0" />
-                    <span className="min-w-0 flex-1 font-semibold">{r.title}</span>
-                    <span className="text-sm">{r.cost} pts</span>
-                    <span
-                      className={
-                        balance >= r.cost
-                          ? "rounded-full bg-success/15 px-2.5 py-0.5 text-sm font-semibold"
-                          : "rounded-full bg-muted px-2.5 py-0.5 text-sm text-muted-foreground"
-                      }
-                    >
-                      {balance >= r.cost ? "Le alcanza" : `Le faltan ${r.cost - balance}`}
+                  <li key={r.id} className="flex items-center gap-3">
+                    <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-muted">
+                      <Gift aria-hidden className="size-5 text-muted-foreground" />
                     </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="flex items-baseline justify-between gap-2">
+                        <span className="truncate font-semibold">{r.title}</span>
+                        <span className="shrink-0 text-sm tabular-nums">
+                          <span className="font-semibold">{Math.min(balance, r.cost)}</span>
+                          <span className="text-muted-foreground"> / {r.cost} pts</span>
+                        </span>
+                      </p>
+                      <Meter
+                        className="mt-1.5"
+                        value={balance}
+                        max={r.cost}
+                        tone={balance >= r.cost ? "brand" : "warning"}
+                        label={`${kid.displayName} hacia «${r.title}»`}
+                      />
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {balance >= r.cost ? "Le alcanza" : `Le faltan ${r.cost - balance}`}
+                      </p>
+                    </div>
                   </li>
                 ))}
               </ul>
             )}
           </Section>
         </div>
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           <Section id="historial-canjes-hijo" title="Historial de canjes">
             {history.length === 0 ? (
               <p className="text-muted-foreground">Todavía no pidió premios.</p>
             ) : (
-              <ul className="flex flex-col divide-y">
+              <ul className="flex flex-col gap-1">
                 {history.map((r) => (
-                  <li key={r.id} className="flex items-center gap-3 py-2">
-                    <span className="w-16 shrink-0 text-sm text-muted-foreground">
-                      {formatShortDate(r.requestedAt.slice(0, 10))}
+                  <li key={r.id} className="flex items-center gap-3 py-1.5">
+                    <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-muted">
+                      <Gift aria-hidden className="size-4 text-muted-foreground" />
                     </span>
-                    <span className="min-w-0 flex-1 truncate font-semibold">{r.rewardTitle}</span>
-                    <span className="text-sm text-muted-foreground">
-                      {r.cost} pts · {REDEMPTION_LABEL[r.status]}
-                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-semibold">{r.rewardTitle}</p>
+                      <p className="text-xs text-muted-foreground">{formatShortDate(r.requestedAt.slice(0, 10))}</p>
+                    </div>
+                    <div className="shrink-0 text-right">
+                      <p className="text-sm font-semibold tabular-nums">{r.cost} pts</p>
+                      <p className={cn("text-xs", r.status === "delivered" ? "text-success" : "text-muted-foreground")}>
+                        {REDEMPTION_LABEL[r.status]}
+                      </p>
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -244,9 +273,9 @@ function ChildRewardsFocus({
 
 export default function RewardsPage(props: PageProps<"/premios">) {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4">
       <PageHeader title="Premios y puntos" description="Puntos internos de la familia, sin valor monetario." />
-      <Suspense fallback={<Skeleton className="h-96 rounded-3xl" />}>
+      <Suspense fallback={<Skeleton className="h-96 rounded-2xl" />}>
         <Rewards searchParams={props.searchParams} />
       </Suspense>
     </div>

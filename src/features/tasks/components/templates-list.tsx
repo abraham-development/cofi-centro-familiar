@@ -59,9 +59,9 @@ export function TemplatesList({
   return (
     <ul className="flex flex-col gap-2">
       {templates.map((t) => (
-        <li key={t.id} className="flex flex-wrap items-center gap-3 rounded-2xl border bg-card p-3">
+        <li key={t.id} className="flex flex-wrap items-center gap-3 rounded-xl border bg-card p-3">
           <div className="min-w-0 flex-1">
-            <p className="flex flex-wrap items-center gap-2 text-lg font-semibold">
+            <p className="flex flex-wrap items-center gap-2 font-semibold">
               <Link href={`/responsabilidades/${t.id}`} className="underline-offset-4 hover:underline">
                 {t.title}
               </Link>

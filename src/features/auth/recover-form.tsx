@@ -61,7 +61,7 @@ export function RecoverForm() {
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} noValidate className="flex flex-col gap-6">
       <div className="space-y-1">
-        <h1 className="text-2xl font-bold">Recuperar contraseña</h1>
+        <h1 className="text-2xl font-semibold">Recuperar contraseña</h1>
         <p className="text-muted-foreground">
           Si el correo tiene una cuenta, te enviaremos un código de 8 dígitos para crear una nueva contraseña.
         </p>

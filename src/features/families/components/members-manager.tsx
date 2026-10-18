@@ -31,10 +31,10 @@ export function MembersManager({ members }: { members: FamilyMemberRow[] }) {
     <div className="flex flex-col gap-4">
       <ul className="flex flex-col gap-2">
         {active.map((m) => (
-          <li key={m.id} className="flex items-center gap-3 rounded-2xl border bg-card p-3">
+          <li key={m.id} className="flex items-center gap-3 rounded-xl border bg-card p-3">
             <MemberAvatar member={m} size="lg" />
             <div className="min-w-0 flex-1">
-              <p className="text-lg font-semibold">{m.displayName}</p>
+              <p className="font-semibold">{m.displayName}</p>
               <p className="text-sm text-muted-foreground">
                 {KIND_LABEL[m.kind]}
                 {m.hasAccount ? " · con cuenta" : ""}
@@ -81,7 +81,7 @@ export function MembersManager({ members }: { members: FamilyMemberRow[] }) {
         }
       />
       {archived.length > 0 ? (
-        <details className="rounded-2xl border p-3">
+        <details className="rounded-xl border p-3">
           <summary className="cursor-pointer font-semibold">Archivados ({archived.length})</summary>
           <ul className="mt-3 flex flex-col gap-2">
             {archived.map((m) => (

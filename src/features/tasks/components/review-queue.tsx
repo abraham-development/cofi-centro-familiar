@@ -63,10 +63,10 @@ export function ReviewQueue({
           {tasks.map((task) => {
             const member = members.get(task.assigneeId);
             return (
-              <li key={task.id} className="flex flex-wrap items-center gap-3 rounded-2xl border bg-card p-3">
+              <li key={task.id} className="flex flex-wrap items-center gap-3 rounded-xl border bg-card p-3">
                 {member ? <MemberAvatar member={member} size="lg" /> : null}
                 <div className="min-w-0 flex-1">
-                  <p className="text-lg font-bold">{task.title}</p>
+                  <p className="font-semibold">{task.title}</p>
                   <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
                     {member?.displayName} · entregó {task.submittedAt ? formatInstantTime(task.submittedAt, timeZone, hourFormat) : ""}
                     {task.dueDate !== today ? ` (${formatShortDay(task.dueDate)})` : ""}
@@ -106,7 +106,7 @@ export function ReviewQueue({
       )}
 
       {recent.length > 0 ? (
-        <details className="rounded-2xl border p-3">
+        <details className="rounded-xl border p-3">
           <summary className="cursor-pointer font-semibold">Corregir registros recientes ({recent.length})</summary>
           <ul className="mt-3 flex flex-col gap-2">
             {recent.map((task) => {

@@ -17,7 +17,7 @@ async function Rules() {
     listMembers(ctx.supabase, ctx.family.id),
   ]);
   return (
-    <div className="rounded-3xl border bg-card p-5 shadow-sm sm:p-6">
+    <div className="rounded-2xl border bg-card p-5">
       <RulesManager rules={rules} kids={members.filter((m) => m.kind === "child")} hourFormat={ctx.family.hourFormat} />
     </div>
   );
@@ -30,7 +30,7 @@ export default function RulesPage() {
         title="Reglas de preparativos"
         description="Visitas y colegio: avisos la noche anterior y en la mañana, y misiones de preparación para los hijos."
       />
-      <Suspense fallback={<Skeleton className="h-72 rounded-3xl" />}>
+      <Suspense fallback={<Skeleton className="h-72 rounded-2xl" />}>
         <Rules />
       </Suspense>
     </div>

@@ -30,7 +30,7 @@ async function Invitation({ params }: PageProps<"/invitacion/[token]">) {
   if (!user || user.isAnonymous) {
     return (
       <div className="flex flex-col gap-4">
-        <h1 className="text-2xl font-bold">Tienes una invitación</h1>
+        <h1 className="text-2xl font-semibold">Tienes una invitación</h1>
         <p className="text-muted-foreground">Para verla, inicia sesión o crea tu cuenta con el correo al que te invitaron.</p>
         <Button size="lg" nativeButton={false} render={<Link href={`/acceso?next=${next}`} />}>
           Iniciar sesión
@@ -50,7 +50,7 @@ async function Invitation({ params }: PageProps<"/invitacion/[token]">) {
     const msg = MESSAGES[preview?.status ?? "not_found"] ?? MESSAGES.not_found;
     return (
       <div className="flex flex-col gap-3" role="status">
-        <h1 className="text-2xl font-bold">{msg.title}</h1>
+        <h1 className="text-2xl font-semibold">{msg.title}</h1>
         <p className="text-muted-foreground">{msg.body}</p>
         <Button variant="outline" nativeButton={false} render={<Link href="/" />}>
           Ir al inicio
@@ -66,7 +66,7 @@ export default function InvitationPage(props: PageProps<"/invitacion/[token]">) 
   return (
     <main className="flex min-h-svh flex-1 flex-col items-center justify-center gap-8 px-4 py-10">
       <Brand size="lg" />
-      <div className="w-full max-w-md rounded-3xl border bg-card p-6 shadow-sm sm:p-8">
+      <div className="w-full max-w-md rounded-2xl border bg-card p-6 sm:p-8">
         <Suspense fallback={<Skeleton className="h-48 rounded-2xl" />}>
           <Invitation {...props} />
         </Suspense>

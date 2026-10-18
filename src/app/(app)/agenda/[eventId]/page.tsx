@@ -50,7 +50,7 @@ export default function EventPage(props: PageProps<"/agenda/[eventId]">) {
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <PageHeader title="Editar evento" />
-      <Suspense fallback={<Skeleton className="h-[40rem] rounded-3xl" />}>
+      <Suspense fallback={<Skeleton className="h-[40rem] rounded-2xl" />}>
         <EditEvent {...props} />
       </Suspense>
     </div>

@@ -22,15 +22,17 @@ import type { MemberSummary } from "@/features/calendar/types";
 
 export function BalancesPanel({ kids, balances }: { kids: MemberSummary[]; balances: Record<string, number> }) {
   return (
-    <ul className="grid gap-3 sm:grid-cols-2">
+    <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
       {kids.map((kid) => (
-        <li key={kid.id} className="flex items-center gap-3 rounded-2xl border bg-card p-3">
-          <MemberAvatar member={kid} size="lg" />
+        <li key={kid.id} className="flex items-center gap-3 rounded-xl bg-muted/60 p-4">
+          <MemberAvatar member={kid} size="md" className="ring-0" />
           <div className="min-w-0 flex-1">
-            <p className="text-lg font-semibold">{kid.displayName}</p>
-            <p className="flex items-center gap-1 text-2xl font-bold tabular-nums">
-              <Coins aria-hidden className="size-5 text-warning" /> {balances[kid.id] ?? 0}
-              <span className="text-base font-normal text-muted-foreground">puntos</span>
+            <p className="flex items-center gap-1.5 text-[0.8125rem] font-medium text-muted-foreground">
+              <Coins aria-hidden className="size-3.5" /> Saldo de {kid.displayName}
+            </p>
+            <p className="mt-1.5 flex items-baseline gap-1.5">
+              <span className="figure text-3xl">{balances[kid.id] ?? 0}</span>
+              <span className="text-sm text-muted-foreground">puntos</span>
             </p>
           </div>
           <AdjustDialog kid={kid} />

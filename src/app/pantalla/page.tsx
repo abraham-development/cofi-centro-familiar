@@ -6,6 +6,8 @@ import { Suspense } from "react";
 
 import { IdentityBadge, type World } from "@/components/app-shell/identity-badge";
 import { Brand } from "@/components/brand";
+import { Panel } from "@/components/panel";
+import { buttonVariants } from "@/components/ui/button";
 import { SnapshotSaver } from "@/components/pwa/snapshot-saver";
 import { ScreenControls } from "@/components/pwa/screen-controls";
 import { makeSnapshot } from "@/lib/pwa/snapshot";
@@ -92,8 +94,8 @@ async function DeviceScreen() {
       <ClockProvider serverNow={now} timeZone={family.timezone} hourFormat={family.hourFormat}>
         <ContextClock events={events} homeColor={family.homeColor} />
         <ScreenNotices notifications={notifications} recipient={`device:${device.id}`} actor="device" />
-        <div className="grid gap-6 xl:grid-cols-3">
-          <div className="flex flex-col gap-6 xl:col-span-2">
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+          <div className="flex min-w-0 flex-col gap-4 xl:col-span-2">
             <TodayTimeline
               events={events}
               tasks={tasks}
@@ -103,13 +105,10 @@ async function DeviceScreen() {
             />
             <WeekRadar events={events} homeColor={family.homeColor} />
           </div>
-          <div className="flex flex-col gap-6">
-            <section aria-labelledby="pendientes-casa" className="flex flex-col gap-4 rounded-3xl border bg-card p-5 shadow-sm sm:p-6">
-              <h2 id="pendientes-casa" className="text-2xl font-bold">
-                Pendientes de la casa
-              </h2>
+          <div className="flex min-w-0 flex-col gap-4">
+            <Panel id="pendientes-casa" title="Pendientes de hoy" caption="Toca la casilla cuando esté hecho">
               <HouseholdList tasks={tasks} actor="device" />
-            </section>
+            </Panel>
             <ChildrenSummary kids={kids} tasks={childTasks} balances={Object.fromEntries(balances)} linkToDetail={false} />
           </div>
         </div>
@@ -130,7 +129,7 @@ function DeviceBar({ name, identity, children }: { name: string; identity: Devic
     <div className="flex flex-col gap-2">
       {identity.world === "child" && identity.accentColor ? (
         // Acento del mundo del hijo: franja con su color.
-        <div aria-hidden className="h-2 w-full rounded-full" style={{ backgroundColor: identity.accentColor }} />
+        <div aria-hidden className="h-1.5 w-full rounded-full" style={{ backgroundColor: identity.accentColor }} />
       ) : null}
       <div className="flex items-center justify-between gap-3">
         <span className="flex items-center gap-3">
@@ -150,9 +149,9 @@ function DeviceBar({ name, identity, children }: { name: string; identity: Devic
           {children}
           <Link
             href="/acceso?next=/casa"
-            className="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 font-semibold text-muted-foreground hover:bg-muted"
+            className={buttonVariants({ variant: "outline" })}
           >
-            <Settings aria-hidden className="size-5" /> <span className="hidden sm:inline">Administrar</span>
+            <Settings aria-hidden /> <span className="hidden sm:inline">Administrar</span>
             <span className="sr-only sm:hidden">Administrar</span>
           </Link>
         </span>
@@ -163,8 +162,8 @@ function DeviceBar({ name, identity, children }: { name: string; identity: Devic
 
 export default function DevicePage() {
   return (
-    <main className="mx-auto flex w-full max-w-[110rem] flex-1 flex-col gap-6 px-4 py-4 sm:px-6">
-      <Suspense fallback={<Skeleton className="h-[80svh] rounded-3xl" />}>
+    <main className="mx-auto flex w-full max-w-[110rem] flex-1 flex-col gap-4 px-4 py-4 sm:px-6">
+      <Suspense fallback={<Skeleton className="h-[80svh] rounded-2xl" />}>
         <DeviceScreen />
       </Suspense>
     </main>

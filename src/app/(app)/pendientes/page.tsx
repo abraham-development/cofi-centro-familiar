@@ -14,7 +14,7 @@ import { requireAdultWithFamily } from "@/lib/auth/session";
 import { requestNow } from "@/lib/time/request-now";
 import { addDays, localDateOf, localToInstant } from "@/lib/time/zoned";
 
-export const metadata: Metadata = { title: "Pendientes" };
+export const metadata: Metadata = { title: "Pendientes de hoy" };
 
 async function Pending() {
   const ctx = await requireAdultWithFamily();
@@ -25,7 +25,7 @@ async function Pending() {
   });
   return (
     <ClockProvider serverNow={now} timeZone={ctx.family.timezone} hourFormat={ctx.family.hourFormat}>
-      <div className="flex flex-col gap-4 rounded-3xl border bg-card p-5 shadow-sm sm:p-6">
+      <div className="flex flex-col gap-4 rounded-2xl border bg-card p-5">
         <QuickAddHousehold />
         <HouseholdList tasks={tasks} variant="full" />
       </div>
@@ -37,15 +37,15 @@ export default function PendingPage() {
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <PageHeader
-        title="Pendientes de la casa"
-        description="Lo operativo del hogar: compras, pagos, llamadas. Sin puntos."
+        title="Pendientes de hoy"
+        description="Lo del día a día: compras, pagos, llamadas. Sin puntos."
         actions={
           <Button size="lg" nativeButton={false} render={<Link href="/pendientes/nuevo" />}>
             <ClipboardPlus aria-hidden /> Nuevo pendiente
           </Button>
         }
       />
-      <Suspense fallback={<Skeleton className="h-96 rounded-3xl" />}>
+      <Suspense fallback={<Skeleton className="h-96 rounded-2xl" />}>
         <Pending />
       </Suspense>
     </div>

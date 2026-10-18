@@ -54,7 +54,7 @@ export default function TemplatePage(props: PageProps<"/responsabilidades/[templ
         title="Editar responsabilidad"
         description="Los cambios se aplican a las próximas tareas; lo ya entregado o revisado no se modifica."
       />
-      <Suspense fallback={<Skeleton className="h-[36rem] rounded-3xl" />}>
+      <Suspense fallback={<Skeleton className="h-[36rem] rounded-2xl" />}>
         <EditTemplate {...props} />
       </Suspense>
     </div>

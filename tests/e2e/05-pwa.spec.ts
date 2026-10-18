@@ -32,7 +32,7 @@ test("PWA instalable: copia autorizada, recarga sin conexión y caché exclusiva
   await page.screenshot({ path: "docs/capturas/pwa-sin-conexion.png", fullPage: true });
   await context.setOffline(false);
   await expect(page).toHaveURL(/\/casa$/);
-  await expect(page.getByRole("heading", { name: "Pendientes de la casa" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Pendientes de hoy" })).toBeVisible();
 });
 
 test("la copia caduca abierta, limpia el DOM y no interpreta títulos como HTML", async ({ page }) => {

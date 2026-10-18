@@ -6,6 +6,7 @@ import type { AgendaEvent } from "../types";
 import { eventTimeLabel } from "./event-time-label";
 import { CategoryIcon } from "@/components/category-icon";
 import { EmptyState } from "@/components/empty-state";
+import { ImportantMark } from "@/components/important-mark";
 import { MemberStack } from "@/components/member-chip";
 import { addDays, daysBetween, formatLongDateWithYear, type HourFormat, relativeDayLabel } from "@/lib/time/zoned";
 
@@ -56,7 +57,7 @@ export function AgendaList({
         const isRel = Math.abs(daysBetween(today, group.date)) <= 1;
         return (
           <li key={group.date} className="flex flex-col gap-2">
-            <h2 className={cn("text-xl font-bold", group.date === today && "text-primary")}>
+            <h2 className={cn("text-sm font-semibold text-muted-foreground", group.date === today && "text-brand-strong")}>
               {isRel ? `${rel} · ` : ""}
               {formatLongDateWithYear(group.date, year)}
             </h2>
@@ -68,25 +69,25 @@ export function AgendaList({
                     <Link
                       href={`/agenda/${event.id}`}
                       className={cn(
-                        "flex flex-col gap-2 rounded-2xl border border-l-[6px] bg-card p-4 transition-colors hover:bg-muted/50 sm:flex-row sm:items-center",
+                        "flex flex-col gap-2 rounded-xl border border-l-[3px] bg-card px-4 py-3 transition-colors hover:bg-muted/50 sm:flex-row sm:items-center",
                         event.status === "cancelled" && "opacity-60",
                       )}
                       style={{ borderLeftColor: accent }}
                     >
-                      <span className="w-40 shrink-0 font-semibold tabular-nums text-muted-foreground">
+                      <span className="w-40 shrink-0 text-sm font-medium tabular-nums text-muted-foreground">
                         {eventTimeLabel(event, timeZone, hourFormat)}
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="flex items-center gap-2 text-lg font-bold">
-                          <CategoryIcon icon={event.category?.icon} className="size-5 shrink-0" />
+                        <span className="flex items-center gap-2 font-semibold">
+                          <CategoryIcon icon={event.category?.icon} className="size-4 shrink-0 text-muted-foreground" />
                           <span className={cn(event.status === "cancelled" && "line-through")}>{event.title}</span>
-                          {event.importance === "high" ? <span aria-label="importante">⭐</span> : null}
+                          {event.importance === "high" ? <ImportantMark /> : null}
                           {event.status === "cancelled" ? (
-                            <span className="rounded-full bg-muted px-2 text-sm font-semibold">Cancelado</span>
+                            <span className="rounded-md bg-muted px-1.5 py-0.5 text-xs font-semibold text-muted-foreground">Cancelado</span>
                           ) : null}
                         </span>
                         {event.location ? (
-                          <span className="flex items-center gap-1 text-sm text-muted-foreground">
+                          <span className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
                             <MapPin aria-hidden className="size-3.5" /> {event.location}
                           </span>
                         ) : null}

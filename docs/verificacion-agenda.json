@@ -1,0 +1,35 @@
+{
+  "build": "01a14b7b-412a-70d5-a97b-5bdfb09e640c",
+  "base": "https://mediumturquoise-elephant-247172.hostingersite.com",
+  "verifiedAt": "2026-10-17T20:12:20.733Z",
+  "checks": [
+    "casa: recuadro «Pendientes de hoy»",
+    "pendientes: pestaña y título «Pendientes de hoy»",
+    "agenda: calendario del mes con hoy elegido",
+    "agenda: línea «Ahora» en el día de hoy",
+    "agenda: elegir mañana muestra sus horas",
+    "ventana rápida: trae la hora tocada",
+    "ventana rápida: «No sé» y avisos 1 h/15 min marcados",
+    "ventana rápida: se cierra sin guardar",
+    "«Más opciones»: formulario completo con lo escrito y sin la ventana encima",
+    "agenda: vista Lista de 7 días",
+    "celular: agenda sin desbordes",
+    "celular: la ventana rápida cabe en la pantalla"
+  ],
+  "errors": [],
+  "source": {
+    "archive": "/tmp/claude-1000/-home-abraham2-Proyectos-COFI/af03c4ec-33d7-484d-a822-5a5d8acd01c7/scratchpad/COFI_20261017_150836.zip",
+    "files": 210,
+    "bytes": 381705,
+    "sha256": "7b0ae33611d5d232ce6ad9522cf478ab2ae7d24073b7859ff6a37682dd225396"
+  },
+  "local_validation": {
+    "vitest": 52,
+    "pgtap": 180,
+    "selected_e2e": 33,
+    "compatible_build": true,
+    "seed_executed": false,
+    "migrations_added": false
+  },
+  "method": "Playwright de solo lectura con la cuenta ficticia de Mamá; la ventana rápida y «Más opciones» se abren sin guardar eventos"
+}

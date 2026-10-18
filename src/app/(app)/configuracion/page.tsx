@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 
 import { PageHeader } from "@/components/page-header";
+import { Panel } from "@/components/panel";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AdultsPanel } from "@/features/families/components/adults-panel";
@@ -16,15 +17,9 @@ export const metadata: Metadata = { title: "Ajustes" };
 
 function Section({ id, title, description, children }: { id: string; title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section aria-labelledby={id} className="flex flex-col gap-4 rounded-3xl border bg-card p-5 shadow-sm sm:p-6">
-      <div>
-        <h2 id={id} className="text-2xl font-bold">
-          {title}
-        </h2>
-        {description ? <p className="text-muted-foreground">{description}</p> : null}
-      </div>
+    <Panel id={id} title={title} caption={description}>
       {children}
-    </section>
+    </Panel>
   );
 }
 
@@ -83,7 +78,7 @@ export default function SettingsPage() {
           </>
         }
       />
-      <Suspense fallback={<Skeleton className="h-[36rem] rounded-3xl" />}>
+      <Suspense fallback={<Skeleton className="h-[36rem] rounded-2xl" />}>
         <Settings />
       </Suspense>
     </div>

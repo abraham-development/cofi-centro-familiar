@@ -73,7 +73,7 @@ export function RegisterForm() {
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} noValidate className="flex flex-col gap-6">
       <div className="space-y-1">
-        <h1 className="text-2xl font-bold">Crear cuenta de adulto</h1>
+        <h1 className="text-2xl font-semibold">Crear cuenta de adulto</h1>
         <p className="text-muted-foreground">
           Los hijos no necesitan cuenta: los agregarás como integrantes de tu familia.
         </p>

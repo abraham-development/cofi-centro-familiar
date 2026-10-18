@@ -127,7 +127,94 @@ Detalle en [arquitectura](arquitectura.md#mundos-padres-hijos-y-casa).
 - Vitest: **45/45**.
 - Playwright: **34/34 de la suite completa**, con semilla de desarrollo (`npm run e2e`, servidor de desarrollo).
 - Sin migraciones ni cambios de permisos.
-- **No publicado todavía en Hostinger.**
+- Build compatible con Hostinger (Webpack + WASM) correcto en local; pgTAP 180/180.
+- **Publicado** a pedido del usuario: build `01a14b0d-43f1-7064-a2ac-f6be61f9a687`, completado a las 13:11 Lima.
+- Diez comprobaciones públicas de solo lectura correctas, sin errores de JavaScript, en [`verificacion-mundos.json`](verificacion-mundos.json):
+  - indicador «Mamá · Padres» a la izquierda de «En vivo»;
+  - barra lateral y vista centrada en Tareas y Premios;
+  - «Ver 30 días»;
+  - aviso de vista previa del hijo;
+  - celular sin desbordes.
+
+  Las insignias «Hijos» y «Casa» de pantallas vinculadas se verificaron solo en local (E2E), para no crear vínculos en la web publicada.
+
+## Agenda visual y «Pendientes de hoy» (17 oct 2026) ✅
+
+Pedido del usuario: una agenda más visual, con el mes a la izquierda y el día por horas a la derecha, donde se toque una hora para escribir qué hay que recordar.
+
+Decisiones tomadas:
+
+- Ventana rápida, con la hora de inicio como dato esencial y la duración opcional.
+- Avisos de 1 h y 15 min antes, marcados por defecto.
+- Vistas: Día y Lista.
+- La agenda muestra solo lo agendado.
+- «Pendientes de hoy» enfocado en el día.
+
+Detalle en [arquitectura](arquitectura.md#agenda-calendario-y-día-por-horas).
+
+| Entregable | Estado | Evidencia |
+| --- | --- | --- |
+| Calendario del mes con puntos por día, hoy y día elegido; cambio de mes | ✅ | E2E `09-agenda-planner` |
+| Día por horas: bloques por color, solapes en columnas, línea «Ahora», Mañana/Tarde/Noche | ✅ | 7 Vitest (`day-layout`) + E2E; capturas `capturas/agenda-dia-escritorio.png` y `capturas/agenda-dia-movil.png` |
+| Agendar tocando una hora: hora editable, «No sé» por defecto, avisos de 60 y 15 marcados, se guarda sin hora de fin | ✅ | E2E (persistencia, detalle y limpieza); captura `capturas/agenda-agendar-movil.png` |
+| «Más opciones» conserva lo escrito sin ponerlo en la URL | ✅ | E2E (y no reaparece al recargar) |
+| Lista de 7/30 días y enlaces anteriores (`desde`, `dias`) | ✅ | E2E 01, 02, 06 y 09 |
+| «Pendientes de hoy» con «Más adelante» plegado; menú sin desbordes a 1280 px | ✅ | E2E |
+
+**Verificación:**
+
+- Tipos, lint y build de producción correctos.
+- Vitest: **52/52**.
+- pgTAP: **180/180**.
+- Playwright: **33/33** sin reiniciar datos (01–03 y 05–09).
+- La `04` no se ejecutó, porque exige la semilla inicial y la suite completa borra la demostración (requiere permiso).
+- Sin migraciones ni cambios de permisos.
+- **Publicado** a pedido del usuario: build `01a14b7b-412a-70d5-a97b-5bdfb09e640c`, completado a las 15:11 Lima. Antes se verificó el build compatible en local.
+- Doce comprobaciones públicas de solo lectura correctas, sin errores de JavaScript, en [`verificacion-agenda.json`](verificacion-agenda.json):
+  - «Pendientes de hoy» en Casa y en la pestaña;
+  - calendario con hoy, línea «Ahora» y elegir mañana;
+  - ventana rápida (hora tocada, «No sé», avisos 1 h/15 min y cierre sin guardar);
+  - «Más opciones» con lo escrito y sin la ventana encima;
+  - Lista de 7 días;
+  - celular sin desbordes.
+
+  No se guardó ningún evento en la web publicada.
+
+## Rediseño visual con identidad propia (18 oct 2026) ✅
+
+Pedido del usuario: que la interfaz no parezca hecha por IA, con el claro como la referencia ACRU y el oscuro como Stakent. Mantiene el menú superior; el tema es Claro / Oscuro / Sistema. Abarca toda la app.
+
+Detalle en [diseño](diseno.md).
+
+| Entregable | Estado | Evidencia |
+| --- | --- | --- |
+| Tokens de ambos temas, Plus Jakarta Sans, radios moderados, iconos de trazo fino y utilidades `figure`, `bg-stripes` y `bg-featured` | ✅ | `globals.css`; contraste AA comprobado con script en ambos temas |
+| Primitivas `Panel`, `Stat`, `Meter` e `ImportantMark` | ✅ | Usadas en todas las pantallas; ya no queda ningún `rounded-3xl` ni ⭐ |
+| Cabecera: menú segmentado, campana, chip de identidad y punto «En vivo». Selector de tema en el menú | ✅ | E2E nueva en `08` (Claro, Oscuro y «Según el equipo»; persiste al recargar) |
+| Casa con fila de cifras y próxima actividad destacada | ✅ | Capturas `capturas/rediseno/` |
+| Agenda, Pendientes, Tareas, Premios (avance hacia premios con barra rayada), Avisos, Ajustes, acceso, pantallas de cocina e hijos | ✅ | Capturas en claro y oscuro, escritorio y celular |
+
+**Verificación:**
+
+- Tipos, lint, build normal y build compatible correctos; Vitest **52/52**; contraste AA en ambos temas.
+- Playwright: **41/41 de la suite completa**, con la demostración reiniciada con permiso del usuario (18 oct).
+- Latencias Realtime: evento celular→cocina 2,5 s, pendiente 2,0 s, aprobación 2,5 s y revocación 1,7 s.
+- Defectos encontrados por las pruebas y corregidos:
+  - La grilla del día se volvía a desplazar con cada actualización en vivo y movía lo que el usuario iba a tocar. Ahora se desplaza una vez por día, antes de pintar.
+  - Una regla recién guardada se reabría con el valor anterior hasta que llegaban los datos nuevos.
+  - El servidor de desarrollo recargaba en bucle tras reiniciarse, por la caché en disco de Turbopack. Se desactivó con `turbopackFileSystemCacheForDev: false`, que solo afecta a desarrollo.
+- Pruebas ajustadas:
+  - la 06 apunta al panel «Hijos hoy»;
+  - la 08 no supone el estado del día;
+  - 01, 06 y 09 abren los eventos de la grilla con el teclado.
+- **Publicado** a pedido del usuario: build `01a14f28-0d28-703e-8696-db7a055ac7dc` (08:18 Lima).
+- Doce comprobaciones públicas de solo lectura correctas, en [`verificacion-rediseno.json`](verificacion-rediseno.json):
+  - ambos temas con su fondo;
+  - Casa con cifras y paneles;
+  - sin emojis;
+  - las páginas principales;
+  - el selector de tema;
+  - el celular sin desbordes.
 
 ## Hitos D y E: IA de texto y voz ⏳ (después del núcleo)
 

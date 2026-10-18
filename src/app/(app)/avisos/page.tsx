@@ -3,6 +3,7 @@ import { Suspense } from "react";
 
 import { ClockProvider } from "@/components/clock/clock-provider";
 import { PageHeader } from "@/components/page-header";
+import { Panel } from "@/components/panel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { listDevices } from "@/features/devices/queries";
 import { listAdults, listMembers } from "@/features/families/queries";
@@ -31,26 +32,17 @@ async function Notices() {
 
   return (
     <ClockProvider serverNow={now} timeZone={ctx.family.timezone} hourFormat={ctx.family.hourFormat}>
-      <div className="grid gap-6 xl:grid-cols-[3fr_2fr]">
-        <section aria-labelledby="historial" className="flex flex-col gap-4 rounded-3xl border bg-card p-5 shadow-sm sm:p-6">
-          <h2 id="historial" className="text-2xl font-bold">
-            Historial
-          </h2>
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[3fr_2fr]">
+        <Panel id="historial" title="Historial" caption="Lo que se avisó a la familia y quién lo vio">
           <NotificationsCenter notifications={notifications} recipient={`user:${ctx.user.id}`} names={names} />
-        </section>
-        <div className="flex flex-col gap-6">
-          <section aria-labelledby="push" className="flex flex-col gap-4 rounded-3xl border bg-card p-5 shadow-sm sm:p-6">
-            <h2 id="push" className="text-2xl font-bold">
-              Notificaciones en este dispositivo
-            </h2>
+        </Panel>
+        <div className="flex min-w-0 flex-col gap-4">
+          <Panel id="push" title="Notificaciones en este dispositivo" caption="Avisos aunque la app esté cerrada">
             <PushOptIn actor="adult" vapidPublicKey={process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? null} />
-          </section>
-          <section aria-labelledby="estado" className="flex flex-col gap-4 rounded-3xl border bg-card p-5 shadow-sm sm:p-6">
-            <h2 id="estado" className="text-2xl font-bold">
-              Estado del sistema de avisos
-            </h2>
+          </Panel>
+          <Panel id="estado" title="Estado del sistema de avisos" caption="Procesamiento automático en el servidor">
             <HealthPanel health={health} />
-          </section>
+          </Panel>
         </div>
       </div>
     </ClockProvider>
@@ -64,7 +56,7 @@ export default function NoticesPage() {
         title="Avisos"
         description="Recordatorios y preparativos. Se generan en el servidor aunque nadie tenga la web abierta."
       />
-      <Suspense fallback={<Skeleton className="h-96 rounded-3xl" />}>
+      <Suspense fallback={<Skeleton className="h-96 rounded-2xl" />}>
         <Notices />
       </Suspense>
     </div>

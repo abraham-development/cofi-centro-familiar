@@ -1,11 +1,10 @@
 "use client";
 
-import { BellRing } from "lucide-react";
-
 import type { AgendaEvent } from "../types";
 import { eventTimeLabel } from "./event-time-label";
 import { CategoryIcon } from "@/components/category-icon";
 import { useClock } from "@/components/clock/clock-provider";
+import { Panel } from "@/components/panel";
 import { addDays, epochFromIso, localDateOf, relativeDayLabel } from "@/lib/time/zoned";
 
 /**
@@ -29,27 +28,24 @@ export function HighlightsPanel({ events }: { events: AgendaEvent[] }) {
     .slice(0, 4);
 
   return (
-    <section aria-labelledby="avisos-titulo" className="flex flex-col gap-3 rounded-3xl border bg-card p-5 shadow-sm sm:p-6">
-      <h2 id="avisos-titulo" className="flex items-center gap-2 text-2xl font-bold">
-        <BellRing aria-hidden className="size-6" /> Importante
-      </h2>
+    <Panel id="avisos-titulo" title="Importante" caption="Hoy y mañana">
       {items.length === 0 ? (
-        <p className="text-muted-foreground">Nada importante para hoy ni mañana.</p>
+        <p className="text-sm text-muted-foreground">Nada importante para hoy ni mañana.</p>
       ) : (
         <ul className="flex flex-col gap-2">
           {items.map((event) => (
-            <li key={event.id} className="rounded-2xl bg-highlight/30 px-4 py-3">
-              <p className="flex items-center gap-1.5 text-sm font-semibold">
-                <CategoryIcon icon={event.category?.icon} />
+            <li key={event.id} className="rounded-xl border-l-[3px] border-warning bg-warning/8 px-3 py-2.5">
+              <p className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                <CategoryIcon icon={event.category?.icon} className="size-3.5" />
                 {relativeDayLabel(event.localStartDate < today ? today : event.localStartDate, today)} ·{" "}
                 {eventTimeLabel(event, timeZone, hourFormat)}
               </p>
-              <p className="text-lg font-bold">{event.title}</p>
-              {event.description ? <p className="mt-1 whitespace-pre-line">{event.description}</p> : null}
+              <p className="mt-0.5 font-semibold">{event.title}</p>
+              {event.description ? <p className="mt-1 text-sm whitespace-pre-line text-muted-foreground">{event.description}</p> : null}
             </li>
           ))}
         </ul>
       )}
-    </section>
+    </Panel>
   );
 }
