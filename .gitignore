@@ -50,3 +50,6 @@ supabase/.branches/
 /playwright-report/
 /playwright/.cache/
 /tests/e2e/.auth/
+
+# destino de despliegue local (no se publica)
+/.hostinger/
