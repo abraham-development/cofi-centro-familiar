@@ -1,6 +1,6 @@
 # AGENTS.md — memoria persistente de COFI (Centro Familiar)
 
-Memoria compartida entre sesiones y entre agentes (Cursor, Claude Code y Codex; `CLAUDE.md` importa este archivo). Lo que no quede escrito aquí o en `docs/` se pierde al cerrar la sesión.
+Memoria compartida entre sesiones y entre agentes (Cursor, Claude Code y Codex). Lo que no quede escrito aquí o en `docs/` se pierde al cerrar la sesión.
 
 - Si el código contradice algo de aquí, manda el código, y este archivo se corrige en el mismo cambio.
 - Aquí va lo necesario para retomar el trabajo. El detalle con evidencia (resultados de pruebas, identificadores de build, hashes) va en `docs/`.
@@ -24,19 +24,27 @@ Los agentes trabajan **por turnos**, uno después de otro, no en paralelo. El qu
 
 ### Al comenzar
 
-1. Lee este archivo completo, después `docs/roadmap.md` y `git status --short`. No sobrescribas cambios ajenos.
-2. Comprueba que las migraciones estén sincronizadas: `npx supabase migration list --linked < /dev/null`.
-3. Retoma desde **Siguiente paso**, salvo que el usuario pida otra cosa.
-4. Para Next.js, lee la guía relevante en `node_modules/next/dist/docs/`: es la versión 16, con `proxy.ts`, Cache Components y Partial Prefetching.
-5. Para Supabase, usa los skills de `.claude/skills/` (`supabase` y `supabase-postgres-best-practices`) y el MCP de `.mcp.json`.
+1. Lee este archivo completo, después `docs/roadmap.md`, `git status --short` y `git log --oneline -5`. No sobrescribas cambios ajenos.
+2. Contrasta lo escrito con la realidad: si Git, las migraciones o los archivos no coinciden con **Estado actual**, otra sesión terminó sin actualizar este archivo. Corrígelo antes de seguir.
+3. Comprueba que las migraciones estén sincronizadas: `npx supabase migration list --linked < /dev/null`.
+4. Si **Trabajo en curso** no está vacío, la sesión anterior quedó a medias: retoma desde ahí. Si no, desde **Siguiente paso**, salvo que el usuario pida otra cosa.
+5. Para Next.js, lee la guía relevante en `node_modules/next/dist/docs/`: es la versión 16, con `proxy.ts`, Cache Components y Partial Prefetching.
+6. Para Supabase, usa los skills de `.claude/skills/` (`supabase` y `supabase-postgres-best-practices`) y el MCP de `.mcp.json`.
+
+### Durante la sesión
+
+- En tareas largas, anota en **Trabajo en curso** qué estás haciendo y qué archivos tocaste, en cuanto empieces a modificar código. Si la sesión se corta, el siguiente agente sabrá qué quedó a medias.
+- Si el usuario toma una decisión o descubres una trampa, escríbela en el momento; no esperes al final.
 
 ### Al terminar (obligatorio si cambiaste algo)
 
 1. Reescribe **Estado actual** y **Siguiente paso** para que reflejen el estado real. No acumules historia ahí: la historia va al registro.
-2. Si el usuario tomó una decisión, añádela a **Decisiones**, con fecha.
-3. Si descubriste una trampa, añádela a **Trampas conocidas**.
-4. Añade una entrada al principio del **Registro de sesiones**: qué se hizo, qué se verificó y qué quedó a medias. Entre una y tres líneas.
-5. Si cerraste un entregable o publicaste, actualiza `docs/roadmap.md` (y `docs/despliegue.md` si aplica) con la evidencia.
+2. Vacía **Trabajo en curso** (deja «Nada») o, si algo quedó a medias, describe exactamente qué falta.
+3. Si el usuario tomó una decisión, añádela a **Decisiones**, con fecha.
+4. Si descubriste una trampa, añádela a **Trampas conocidas**.
+5. Añade una entrada al principio del **Registro de sesiones**: fecha, hora, agente, qué se hizo, qué se verificó y qué quedó a medias. Entre una y tres líneas. Si el registro pasa de 15 entradas, mueve las más antiguas al final de `docs/roadmap.md`.
+6. Si cerraste un entregable o publicaste, actualiza `docs/roadmap.md` (y `docs/despliegue.md` si aplica) con la evidencia.
+7. Si cambiaste rutas, comandos, migraciones o pruebas, actualiza **Mapa del código** y **Comandos**.
 
 Escribe hechos comprobados. Distingue entre «verificado», «implementado sin verificar» y «pendiente». Nunca copies aquí secretos, contraseñas, tokens ni claves.
 
@@ -63,13 +71,13 @@ Variables: `.env.local` (desarrollo) y `.env.production` (Hostinger, permisos `0
 | --- | --- |
 | `src/app/(auth)`, `src/app/auth` | Registro, acceso y recuperación con OTP |
 | `src/app/(app)/` | Zona autenticada: `casa`, `agenda`, `pendientes`, `responsabilidades`, `hijos/[memberId]`, `premios`, `avisos`, `configuracion` (incluye `reglas` y `dispositivos`) |
-| `src/app/pantalla`, `src/app/vincular` | Pantalla vinculada y flujo de vinculación |
+| `src/app/pantalla`, `src/app/vincular` | Pantalla vinculada; mundo del hijo con `?vista=inicio\|tareas\|premios\|ajustes`, ajustes propios y flujo de vinculación |
 | `src/features/<módulo>/` | Lógica por módulo: `actions.ts` (Server Actions), `queries.ts`, `schemas.ts` (Zod), `use-cases.ts` y `components/`. Módulos: `auth`, `automations`, `calendar`, `children`, `devices`, `families`, `notifications`, `rewards` y `tasks` |
 | `src/lib/` | Clientes Supabase y tipos generados (`supabase/database.types.ts`), sesión (`auth/`), fechas (`time/zoned.ts`), PWA (`pwa/`), errores y validación |
 | `src/components/pwa/`, `public/sw.js`, `src/app/manifest.ts` | PWA: registro, Wake Lock, copia sin conexión y service worker solo de archivos públicos |
 | `src/proxy.ts` | Refresco de sesión (sustituye a `middleware.ts` en Next 16) |
-| `supabase/migrations/`, `supabase/tests/database/` | Esquema (8 migraciones) y pruebas pgTAP (01–07) |
-| `tests/unit/`, `tests/e2e/` | Vitest y Playwright (01–09) |
+| `supabase/migrations/`, `supabase/tests/database/` | Esquema (9 migraciones) y pruebas pgTAP (01–08) |
+| `tests/unit/`, `tests/e2e/` | Vitest y Playwright (01–10) |
 | `scripts/` | `build.mjs` (selecciona Turbopack o Webpack para Hostinger), `seed-dev.mjs`, `db-test-remote.mjs` y `configure-auth.mjs` |
 
 ## Comandos
@@ -81,6 +89,7 @@ Variables: `.env.local` (desarrollo) y `.env.production` (Hostinger, permisos `0
 | Unitarias | `npm test` |
 | pgTAP contra el proyecto remoto | `npm run db:test` |
 | E2E sin borrar datos | `npx playwright test <archivos>` |
+| Mundo del hijo en web publicada (cuentas ficticias, sin semilla) | `E2E_BASE_URL=https://mediumturquoise-elephant-247172.hostingersite.com npx playwright test tests/e2e/10-child-world.spec.ts` |
 | E2E completa (**borra y recrea la demostración: pide permiso**) | `npm run e2e` |
 | E2E contra build de producción | `npm run build`, después `E2E_PORT=3001 E2E_PRODUCTION=1 npx playwright test <archivos>` |
 | Build local / build para Hostinger | `npm run build` / `npm run build:hostinger` |
@@ -89,7 +98,7 @@ Variables: `.env.local` (desarrollo) y `.env.production` (Hostinger, permisos `0
 
 ## Estado actual
 
-_Última actualización: 18 oct 2026, 08:25._
+_Última actualización: 18 oct 2026, 19:10._
 
 - **Hito A** (base, agenda y casa): ✅ verificado.
 - **Hito B** (tareas, puntos, pantallas y Realtime): ✅ verificado. La vinculación se simplificó: ahora se configura desde la cuenta adulta en el propio equipo, con el código como alternativa. Publicado y verificado.
@@ -110,18 +119,30 @@ _Última actualización: 18 oct 2026, 08:25._
   - Primitivas `Panel`, `Stat` y `Meter`.
   - Abarca toda la app. Ver `docs/diseno.md`.
 - **Hitos D y E** (IA de texto y voz): ⏳ no empezar hasta cerrar el Hito C.
-- **Publicado** en Hostinger con el rediseño (build `01a14f28…`, 18 oct, 08:18 Lima). Doce comprobaciones públicas de solo lectura correctas (`docs/verificacion-rediseno.json`).
-- **Última verificación completa (18 oct):** E2E **41/41** de la suite completa, con la demostración reiniciada con permiso; Vitest 52/52; pgTAP 180/180 (17 oct; el esquema no cambió desde entonces); contraste AA; tipos, lint, build y build compatible correctos. Las 8 migraciones están sincronizadas. Detalle en `docs/roadmap.md`.
-- **Git:** rama `main` con un solo commit (`1c307d5 primer commit`, 17 oct) y sin remoto. Incluye los mundos; la agenda visual, «Pendientes de hoy» y el rediseño están **sin confirmar**.
+- **Mundo del hijo y ajustes propios:** ✅ verificado y publicado. Inicio / Tareas / Premios / Ajustes; la tuerca ya no abre el acceso adulto. Color/avatar de catálogo sincronizados por hijo, independientes del color familiar; tema, noche y encendido locales. El acceso adulto es secundario y explícito. Ver `docs/pantallas.md`.
+- **Publicado** en Hostinger: build `01a1517a…` (18 oct, 19:08 Lima). Cuatro recorridos públicos por HTTPS correctos, sin errores de consola (`docs/verificacion-mundo-hijo.json`).
+- **Verificación del cambio:** 55/55 Vitest, 198/198 pgTAP, 13/13 E2E de 05/07/10; además 4/4 contra build compatible y 4/4 en Hostinger. Tipos, lint y ambos builds correctos. Nueve migraciones sincronizadas. No se ejecutó la semilla. Wake Lock simulado; equipos físicos pendientes.
+- **Última suite E2E completa:** 41/41, 18 oct por la mañana, con demostración reiniciada con permiso; corresponde a la versión previa. No se repitió el reinicio en este cambio.
+- **Git:** rama `main`, dos commits (`1c307d5 primer commit`, `314b315 cofi1.2`) y sin remoto. El mundo del hijo y los cambios de documentación están sin confirmar; se conservó la edición previa de Cursor en `AGENTS.md`.
+
+## Trabajo en curso
+
+Nada.
 
 ## Siguiente paso
 
 1. Recordatorios en series de eventos: interfaz en el formulario de series, reutilizando la columna existente.
 2. Emisor Web Push: revalidar destinatarios, revocaciones y vigencia antes de enviar, y resolver el cierre de sesión y el cambio de familia. Después configurar VAPID, autenticación y Vault. Consultar costos y pedir permiso si algo puede cobrarse.
-3. Validar en equipos reales instalación, suspensión, noche, Wake Lock y entrega Push. Entonces cerrar el Hito C en `docs/roadmap.md`.
-4. Proponer al usuario el primer commit. Si se sube a GitHub, el repositorio debe ser **privado** (ver Decisiones).
+3. Validar en equipos reales el mundo del hijo y sus ajustes, instalación, suspensión, noche, Wake Lock y entrega Push. Entonces cerrar el Hito C en `docs/roadmap.md`.
+4. Proponer al usuario un remoto para respaldar el código. Si se sube a GitHub, el repositorio debe ser **privado** (ver Decisiones).
 
 ## Decisiones
+
+### Mundo del hijo (18 oct 2026)
+
+- Inicio, Tareas, Premios y Ajustes en la pantalla vinculada. La tuerca abre ajustes propios, sin acceso adulto.
+- El hijo puede personalizar color y avatar de catálogo, sincronizados entre sus equipos; el color familiar de agenda se conserva. Tema y controles de pantalla por equipo.
+- Publicar el cambio verificado en el sitio Hostinger existente, conservando el ZIP. No reiniciar la demostración ni hacer commits.
 
 ### Reglas permanentes del usuario
 
@@ -196,6 +217,8 @@ _Última actualización: 18 oct 2026, 08:25._
 
 ### Pantallas y dispositivos
 
+- Los efectos de encendido y noche automática viven en `ScreenPreferencesProvider`, fuera de la vista elegida: moverlos al panel de ajustes libera el Wake Lock al cambiar de pestaña.
+- En `/vincular`, comprobar que exista sesión de pantalla antes de llamar `get_device_status`; sin sesión, la RPC responde 401. Es distinto de una vinculación revocada.
 - Una revocación puede ocurrir entre `get_device_status` y la lectura de la familia. Esa lectura usa `maybeSingle()` y, si RLS ya no devuelve fila, trata el dispositivo como revocado: no lanza `PGRST116` ni conserva su copia.
 - Los botones de shadcn se agrandaron a unos 44 px de alto (en `src/components/ui/button.tsx`, `input.tsx` y `select.tsx`).
 
@@ -237,6 +260,9 @@ La suite E2E completa (`npm run e2e`) solo con aprobación del usuario, porque r
 
 Entradas nuevas arriba. Entre una y tres líneas por sesión.
 
+- **18 oct 2026, 19:10 (Codex):** mundo del hijo con pestañas, tuerca con ajustes propios y apariencia sincronizada; migración 9 aplicada. Verificados 55 Vitest, 198 pgTAP, 13 E2E locales + 4 contra build compatible + 4 públicos; publicado build `01a1517a…`. Sin semilla ni commits; validación física pendiente.
+
+- **18 oct 2026, 18:35 (Cursor):** `AGENTS.md` reforzado como memoria persistente: sección **Trabajo en curso**, contraste con Git al empezar, límite del registro y pasos durante la sesión. Registrado el commit `314b315`. Migraciones 8/8 sincronizadas. Sin cambios de código.
 - **18 oct 2026, 08:25 (Claude Code):** con permiso, demostración reiniciada y E2E completa **41/41**. Corregidos: la grilla del día que saltaba con cada actualización en vivo, una regla que se reabría con el valor viejo y el bucle de recargas de `next dev` (caché de Turbopack desactivada en desarrollo). Publicado: build `01a14f28…`, doce comprobaciones públicas.
 - **18 oct 2026, 07:30 (Claude Code):** rediseño visual completo: tokens ACRU/Stakent, Plus Jakarta Sans, `Panel`, `Stat` y `Meter`, cabecera restilizada, tema Claro / Oscuro / Sistema y sin ⭐. Sin migraciones. Verificados tipos, lint, build, 52 Vitest, contraste AA y 31/34 E2E; las 3 restantes dependen de la semilla de ayer y quedan pendientes de `npm run e2e` con permiso. Sin publicar.
 

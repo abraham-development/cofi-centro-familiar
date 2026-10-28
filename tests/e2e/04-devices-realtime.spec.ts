@@ -106,6 +106,7 @@ test("la cocina marca un pendiente y el celular lo ve en vivo", async () => {
 test("la tablet del cuarto de Mateo solo muestra lo suyo", async () => {
   await pair(room, "child", "Cuarto de Mateo (E2E)");
   await expect(room.getByRole("heading", { name: "Hola, Mateo" })).toBeVisible();
+  await room.getByRole("navigation", { name: "Mi mundo" }).getByRole("link", { name: "Tareas", exact: true }).click();
   const board = room.getByRole("region", { name: "Mis tareas de hoy" });
   await expect(board.getByText("Tender la cama")).toBeVisible();
   await expect(
@@ -114,14 +115,17 @@ test("la tablet del cuarto de Mateo solo muestra lo suyo", async () => {
   // Nada de otros: ni la reunión de adultos ni el campamento de Sofía.
   await expect(room.getByText("Reunión de padres (virtual)")).toHaveCount(0);
   await expect(room.getByText("Campamento de Sofía")).toHaveCount(0);
+  await room.getByRole("navigation", { name: "Mi mundo" }).getByRole("link", { name: "Inicio", exact: true }).click();
   await expect(room.getByRole("region", { name: "Avisos" }).getByText("Dentista de Mateo")).toBeVisible();
 });
 
 test("el hijo cumple un hábito y ve sus puntos; el adulto aprueba y el hijo lo ve en vivo", async () => {
+  await room.getByRole("navigation", { name: "Mi mundo" }).getByRole("link", { name: "Tareas", exact: true }).click();
   const board = room.getByRole("region", { name: "Mis tareas de hoy" });
   const habit = board.getByRole("listitem").filter({ hasText: "Cepillarse los dientes" });
   await habit.getByRole("button", { name: "¡Listo!" }).click();
   await expect(room.getByText("¡Hecho! +5 puntos")).toBeVisible();
+  await room.getByRole("navigation", { name: "Mi mundo" }).getByRole("link", { name: "Premios", exact: true }).click();
   await expect(room.getByRole("region", { name: "Mis puntos" }).getByText("40", { exact: true })).toBeVisible();
 
   await expect(room.getByText("En vivo")).toBeVisible({ timeout: 20_000 });

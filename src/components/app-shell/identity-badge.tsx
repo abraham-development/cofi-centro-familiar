@@ -2,6 +2,7 @@ import { House } from "lucide-react";
 import { cn } from "cn";
 
 import { MemberAvatar } from "@/components/member-chip";
+import type { ChildAvatarKey } from "@/features/children/appearance";
 
 export type World = "parents" | "child" | "home";
 
@@ -31,7 +32,7 @@ export function IdentityBadge({
 }: {
   world: World;
   name: string;
-  avatar?: { displayName: string; color: string; initials: string; avatarEmoji: string | null };
+  avatar?: { displayName: string; color: string; initials: string; avatarEmoji: string | null; avatarKey?: ChildAvatarKey | null };
   /** Información adicional para el título emergente (p. ej., el rol). */
   detail?: string;
   /** Color del mundo del hijo; por defecto, el del propio avatar. */

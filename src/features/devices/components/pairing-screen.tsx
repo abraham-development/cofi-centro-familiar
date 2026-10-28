@@ -31,6 +31,10 @@ export function PairingScreen({ revoked, isAdult }: { revoked: boolean; isAdult:
 
   const checkStatus = useCallback(async () => {
     const supabase = createDeviceClient();
+    // Una visita nueva (o recién revocada) todavía no tiene identidad de
+    // pantalla. La RPC solo admite sesiones autenticadas.
+    const { data: session } = await supabase.auth.getSession();
+    if (!session.session) return false;
     const { data } = await supabase.rpc("get_device_status");
     const row = data?.[0];
     if (row?.status === "paired") {

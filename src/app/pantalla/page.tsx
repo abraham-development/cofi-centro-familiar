@@ -1,6 +1,5 @@
 import { Settings } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
@@ -9,7 +8,7 @@ import { Brand } from "@/components/brand";
 import { Panel } from "@/components/panel";
 import { buttonVariants } from "@/components/ui/button";
 import { SnapshotSaver } from "@/components/pwa/snapshot-saver";
-import { ScreenControls } from "@/components/pwa/screen-controls";
+import { ScreenPreferencesProvider } from "@/components/pwa/screen-controls";
 import { makeSnapshot } from "@/lib/pwa/snapshot";
 import { ClockProvider } from "@/components/clock/clock-provider";
 import { ContextClock } from "@/components/clock/context-clock";
@@ -17,6 +16,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { TodayTimeline } from "@/features/calendar/components/today-timeline";
 import { WeekRadar } from "@/features/calendar/components/week-radar";
 import { listEventsInRange } from "@/features/calendar/queries";
+import { childWorldMember, type ChildAvatarKey } from "@/features/children/appearance";
+import { LinkedWorldShell, WorldLink } from "@/features/devices/components/linked-world-shell";
+import { LinkedScreenSettings } from "@/features/devices/components/linked-screen-settings";
 import { ChildScreen } from "@/features/children/components/child-screen";
 import { ChildrenSummary } from "@/features/children/components/children-summary";
 import { loadChildScreen } from "@/features/children/load-child-screen";
@@ -48,16 +50,16 @@ async function DeviceScreen() {
     const member = members.find((m) => m.id === device.memberId);
     if (!member) return <RevokedDevice />;
     const data = await loadChildScreen(supabase, family, member, now);
+    const worldMember = childWorldMember(member, data.appearance);
     return (
-      <>
+      <ScreenPreferencesProvider preferenceId={device.id} timezone={family.timezone} quietStart={family.quietStart} quietEnd={family.quietEnd} hourFormat={family.hourFormat} serverNow={now}>
         <SnapshotSaver snapshot={makeSnapshot({ actor: "device", identity: ctx.identity, family, label: member.displayName, now, events: data.events, tasks: data.tasks, members })} />
         <DeviceBar
           name={device.name}
-          identity={{ world: "child", name: member.displayName, avatar: member, accentColor: member.color }}
+          identity={{ world: "child", name: member.displayName, avatar: worldMember, accentColor: worldMember.color }}
         >
           <DeviceRuntime topics={[`member:${member.id}`, `fam:${family.id}:screens`, `device:${device.id}`]} />
         </DeviceBar>
-        <ScreenControls preferenceId={device.id} timezone={family.timezone} quietStart={family.quietStart} quietEnd={family.quietEnd} hourFormat={family.hourFormat} serverNow={now} />
         <ChildScreen
           member={member}
           data={data}
@@ -67,8 +69,9 @@ async function DeviceScreen() {
           homeColor={family.homeColor}
           actor="device"
           recipient={`device:${device.id}`}
+          settings={<LinkedScreenSettings name={device.name} member={member} appearance={data.appearance} />}
         />
-      </>
+      </ScreenPreferencesProvider>
     );
   }
 
@@ -85,13 +88,13 @@ async function DeviceScreen() {
   ]);
 
   return (
-    <>
+    <ScreenPreferencesProvider preferenceId={device.id} timezone={family.timezone} quietStart={family.quietStart} quietEnd={family.quietEnd} hourFormat={family.hourFormat} serverNow={now}>
       <SnapshotSaver snapshot={makeSnapshot({ actor: "device", identity: ctx.identity, family, label: device.name, now, events, tasks: [...tasks, ...childTasks], members })} />
       <DeviceBar name={device.name} identity={{ world: "home", name: device.name }}>
         <DeviceRuntime topics={[`fam:${family.id}:screens`, `device:${device.id}`]} />
       </DeviceBar>
-      <ScreenControls preferenceId={device.id} timezone={family.timezone} quietStart={family.quietStart} quietEnd={family.quietEnd} hourFormat={family.hourFormat} serverNow={now} />
       <ClockProvider serverNow={now} timeZone={family.timezone} hourFormat={family.hourFormat}>
+        <LinkedWorldShell scope="home" settings={<LinkedScreenSettings name={device.name} />} start={<>
         <ContextClock events={events} homeColor={family.homeColor} />
         <ScreenNotices notifications={notifications} recipient={`device:${device.id}`} actor="device" />
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
@@ -112,15 +115,16 @@ async function DeviceScreen() {
             <ChildrenSummary kids={kids} tasks={childTasks} balances={Object.fromEntries(balances)} linkToDetail={false} />
           </div>
         </div>
+        </>} />
       </ClockProvider>
-    </>
+    </ScreenPreferencesProvider>
   );
 }
 
 type DeviceIdentity = {
   world: World;
   name: string;
-  avatar?: { displayName: string; color: string; initials: string; avatarEmoji: string | null };
+  avatar?: { displayName: string; color: string; initials: string; avatarEmoji: string | null; avatarKey?: ChildAvatarKey | null };
   accentColor?: string;
 };
 
@@ -135,7 +139,7 @@ function DeviceBar({ name, identity, children }: { name: string; identity: Devic
         <span className="flex items-center gap-3">
           <Brand />
           {identity.world === "child" ? (
-            <span className="hidden text-muted-foreground sm:inline">· {name}</span>
+            <span className="hidden max-w-52 truncate text-muted-foreground md:inline">· {name}</span>
           ) : null}
         </span>
         <span className="flex items-center gap-2">
@@ -147,13 +151,13 @@ function DeviceBar({ name, identity, children }: { name: string; identity: Devic
             detail={identity.world === "child" ? `Pantalla «${name}»` : undefined}
           />
           {children}
-          <Link
-            href="/acceso?next=/casa"
+          <WorldLink
+            view="ajustes"
             className={buttonVariants({ variant: "outline" })}
           >
-            <Settings aria-hidden /> <span className="hidden sm:inline">Administrar</span>
-            <span className="sr-only sm:hidden">Administrar</span>
-          </Link>
+            <Settings aria-hidden /> <span className="hidden lg:inline">Ajustes de mi pantalla</span>
+            <span className="sr-only lg:hidden">Ajustes de mi pantalla</span>
+          </WorldLink>
         </span>
       </div>
     </div>

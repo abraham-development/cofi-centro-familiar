@@ -1,0 +1,93 @@
+{
+  "verifiedAt": "2026-10-18T19:10:25.822631-05:00",
+  "site": "https://mediumturquoise-elephant-247172.hostingersite.com",
+  "feature": "Mundo del hijo y ajustes de pantalla vinculada",
+  "migration": "20261018235417_child_world_appearance",
+  "migrationsSynchronized": 9,
+  "local": {
+    "typecheck": "passed",
+    "lint": "passed",
+    "vitest": {
+      "passed": 55,
+      "total": 55
+    },
+    "pgTap": {
+      "passed": 198,
+      "total": 198
+    },
+    "playwrightDevelopment": {
+      "files": [
+        "05-pwa",
+        "07-current-device",
+        "10-child-world"
+      ],
+      "passed": 13,
+      "total": 13
+    },
+    "playwrightHostingerBuild": {
+      "files": [
+        "10-child-world"
+      ],
+      "passed": 4,
+      "total": 4
+    },
+    "buildHostinger": "passed",
+    "buildNormal": "passed"
+  },
+  "checks": [
+    "Tuerca abre ajustes propios sin autenticación adulta",
+    "Inicio/Tareas/Premios/Ajustes con URL e historial",
+    "Color y avatar sincronizados en dos equipos del mismo hijo",
+    "Otro hijo conserva su apariencia",
+    "Borrador conservado ante actualización Realtime",
+    "Vista previa adulta muestra la apariencia personal",
+    "Tema local y restauración tras noche automática",
+    "Wake Lock simulado se mantiene entre pestañas",
+    "Ajustes de pantalla familiar y acceso adulto explícito",
+    "Sin desbordamientos en 320, 390, 768, 1180 y 1440 px"
+  ],
+  "hardwareValidation": "Pendiente en Android/iOS reales; Wake Lock simulado en Playwright",
+  "databaseAdvisors": "Solo categorías conocidas: sesiones anónimas y contraseñas filtradas",
+  "dataHandling": {
+    "seedExecuted": false,
+    "demoReset": false,
+    "appearanceRestored": true,
+    "testDevicesRevoked": true,
+    "commitsCreated": false,
+    "newResources": false,
+    "environmentVariablesChanged": false
+  },
+  "archive": {
+    "path": "/home/abraham2/Proyectos/COFI-publicaciones/COFI_20261018_190457.zip",
+    "filename": "COFI_20261018_190457.zip",
+    "files": 219,
+    "sha256": "9f0ab66c10ac18530dc00b7446d1ad6f6a7d4ae7e76db8a2e629798079d8c33f",
+    "bytes": 384448
+  },
+  "deployment": {
+    "uuid": "01a1517a-b379-703c-b1a8-bb7266ebd0f6",
+    "state": "completed",
+    "removeArchive": false,
+    "completedAt": "2026-10-19T00:08:34Z"
+  },
+  "publicVerification": {
+    "state": "passed",
+    "passed": 4,
+    "total": 4,
+    "consoleErrors": 0,
+    "command": "E2E_BASE_URL=https://mediumturquoise-elephant-247172.hostingersite.com npx playwright test tests/e2e/10-child-world.spec.ts",
+    "data": "Cuentas ficticias existentes; vínculos temporales revocados; apariencia previa restaurada; sin semilla ni reinicio de demostración."
+  },
+  "dependencyAudit": {
+    "productionDependencyTreeHigh": 7,
+    "directPackage": "shadcn (CLI)",
+    "packagesChanged": false,
+    "note": "Avisos de la herramienta CLI y dependencias transitivas; no hay imports de esas herramientas en src/scripts. Se deja para mantenimiento separado."
+  },
+  "captures": [
+    "docs/capturas/mundo-hijo-ajustes-movil.png",
+    "docs/capturas/mundo-hijo-ajustes-oscuro.png",
+    "docs/capturas/mundo-hijo-ajustes-claro.png",
+    "docs/capturas/mundo-hijo-inicio-claro.png"
+  ]
+}

@@ -1,5 +1,8 @@
 import type { loadChildScreen } from "../load-child-screen";
 import { ChildNotices } from "./child-notices";
+import { ChildDaySummary } from "./child-day-summary";
+import { childWorldMember } from "../appearance";
+import { LinkedWorldShell } from "@/features/devices/components/linked-world-shell";
 import { Eye } from "lucide-react";
 import Link from "next/link";
 
@@ -23,6 +26,7 @@ export function ChildScreen({
   actor,
   recipient,
   viewer,
+  settings,
 }: {
   member: MemberSummary;
   data: Awaited<ReturnType<typeof loadChildScreen>>;
@@ -35,7 +39,11 @@ export function ChildScreen({
   recipient: string;
   /** Adulto que está viendo el mundo del hijo (vista previa desde el mundo de padres). */
   viewer?: { displayName: string };
+  settings?: React.ReactNode;
 }) {
+  const worldMember = childWorldMember(member, data.appearance);
+  const taskBoard = <ChildTaskBoard tasks={data.tasks} habitHistory={data.tasks.filter((t) => t.kind === "habit")} actor={actor} />;
+  const rewards = <ChildRewards memberId={member.id} balance={data.balance} rewards={data.rewards} redemptions={data.redemptions} actor={actor} />;
   return (
     <ClockProvider serverNow={serverNow} timeZone={timeZone} hourFormat={hourFormat}>
       <div className="flex flex-col gap-4">
@@ -43,7 +51,7 @@ export function ChildScreen({
           <div
             role="note"
             className="flex flex-wrap items-center gap-3 rounded-xl border border-l-4 bg-card px-4 py-3 text-sm"
-            style={{ borderLeftColor: member.color }}
+            style={{ borderLeftColor: worldMember.color }}
           >
             <Eye aria-hidden className="size-4 shrink-0 text-muted-foreground" />
             <p className="min-w-0 flex-1">
@@ -59,31 +67,32 @@ export function ChildScreen({
           </div>
         ) : null}
         <header className="flex items-center gap-4">
-          <MemberAvatar member={member} size="xl" className="ring-0" />
+          <MemberAvatar member={worldMember} size="xl" className="ring-0" />
           <div>
             <p className="text-base text-muted-foreground">Tu día</p>
             <h1 className="text-3xl font-semibold sm:text-4xl">Hola, {member.displayName}</h1>
           </div>
         </header>
-        <ContextClock events={data.events} homeColor={homeColor} variant="compact" />
         <ScreenNotices notifications={data.notifications} recipient={recipient} actor={actor} title="Para ti" />
-        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[3fr_2fr]">
-          <ChildTaskBoard
-            tasks={data.tasks}
-            habitHistory={data.tasks.filter((t) => t.kind === "habit")}
-            actor={actor}
+        {actor === "device" && settings ? (
+          <LinkedWorldShell scope="child"
+            start={<>
+              <ContextClock events={data.events} homeColor={homeColor} variant="compact" />
+              <ChildDaySummary tasks={data.tasks} balance={data.balance} />
+              <ChildNotices events={data.events} />
+            </>}
+            tasks={taskBoard}
+            rewards={rewards}
+            settings={settings}
           />
-          <div className="flex min-w-0 flex-col gap-4">
-            <ChildNotices events={data.events} />
-            <ChildRewards
-              memberId={member.id}
-              balance={data.balance}
-              rewards={data.rewards}
-              redemptions={data.redemptions}
-              actor={actor}
-            />
+        ) : <>
+          <ContextClock events={data.events} homeColor={homeColor} variant="compact" />
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-[3fr_2fr]">
+            {taskBoard}
+            <div className="flex min-w-0 flex-col gap-4"><ChildNotices events={data.events} />{rewards}</div>
           </div>
-        </div>
+        </>}
+
       </div>
     </ClockProvider>
   );

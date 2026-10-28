@@ -705,6 +705,8 @@ export type Database = {
         Row: {
           archived_at: string | null
           avatar_emoji: string | null
+          child_accent_color: string | null
+          child_avatar_key: string | null
           color: string
           created_at: string
           display_name: string
@@ -719,6 +721,8 @@ export type Database = {
         Insert: {
           archived_at?: string | null
           avatar_emoji?: string | null
+          child_accent_color?: string | null
+          child_avatar_key?: string | null
           color: string
           created_at?: string
           display_name: string
@@ -733,6 +737,8 @@ export type Database = {
         Update: {
           archived_at?: string | null
           avatar_emoji?: string | null
+          child_accent_color?: string | null
+          child_avatar_key?: string | null
           color?: string
           created_at?: string
           display_name?: string
@@ -2164,6 +2170,13 @@ export type Database = {
           p_task_title: string
         }
         Returns: string
+      }
+      save_child_appearance: {
+        Args: { p_accent_color: string; p_avatar_key: string }
+        Returns: {
+          accent_color: string
+          avatar_key: string
+        }[]
       }
       save_push_subscription: {
         Args: {

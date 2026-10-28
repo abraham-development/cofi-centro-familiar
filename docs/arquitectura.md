@@ -85,6 +85,10 @@ Cada pantalla dice quién la usa y en qué mundo está. Lo hace con `IdentityBad
 - En el celular, el indicador de la cabecera se oculta para no desbordar. El avatar del adulto pasa a ser el botón del menú («Menú de Mamá · Familia …»), y un texto accesible indica el mundo.
 - Cuando un adulto abre `/hijos/[id]`, un aviso con el color del hijo indica que está viendo el mundo del hijo y que lo que marque queda a su nombre de adulto. Enlaza al seguimiento del hijo.
 
+## Mundo del hijo vinculado
+
+La pantalla vinculada del hijo se organiza en Inicio, Tareas, Premios y Ajustes con `?vista=`. `LinkedWorldShell` usa History API y `useSearchParams` para cambiar de vista sin desmontar Realtime ni los efectos de pantalla. Las consultas y acciones conservan la identidad `device`; la tuerca abre ajustes propios y el acceso adulto es un enlace secundario explícito. La apariencia personal reside en `family_members.child_accent_color/child_avatar_key`, independiente del color familiar, y se guarda mediante una RPC limitada al hijo del vínculo. Ver [pantallas](pantallas.md).
+
 ## Seguimiento por hijo en Tareas y Premios
 
 `ChildrenSidebar` (`src/features/children/components/children-sidebar.tsx`) muestra «Todos» y luego cada hijo, con un dato breve y un aviso.

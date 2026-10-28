@@ -113,6 +113,15 @@ Verificados por HTTPS ambos modos de configuración desde el propio equipo, acce
 - **Datos:** antes de publicar, con permiso del usuario, se reinició la demostración para ejecutar la E2E completa (41/41).
 - `next.config.js` desactiva la caché en disco de Turbopack para `next dev`; el build de Hostinger no cambia.
 
+## Mundo del hijo y ajustes, 18 oct 2026
+
+- **Build:** `01a1517a-b379-703c-b1a8-bb7266ebd0f6`, completado a las 19:08 Lima en el Web App existente. Sin cambiar variables ni crear recursos.
+- **Archivo conservado:** un archivo local del equipo, 219 archivos, SHA-256 `9f0ab66c10ac18530dc00b7446d1ad6f6a7d4ae7e76db8a2e629798079d8c33f`; solo fuentes y recursos públicos, sin credenciales, dependencias ni pruebas. `removeArchive: false`. Los 219 archivos coinciden con los publicados.
+- **Base de datos:** migración aditiva `20261018235417_child_world_appearance`, ensayada con pgTAP en transacciones revertidas antes de aplicarla al Supabase compartido. Nueve migraciones sincronizadas.
+- **Verificación:** 13 E2E de regresión locales, 4 contra build compatible y **4/4** recorridos por HTTPS en el sitio publicado, sin errores de consola. Color/avatar sincronizados, borradores, permisos, vista previa adulta, controles locales y 320–1440 px en claro/oscuro. Evidencia en [verificacion-mundo-hijo.json](verificacion-mundo-hijo.json).
+- **Datos:** no se reinició la demostración. Las pruebas usaron cuentas ficticias existentes, restauraron su apariencia previa y revocaron solo sus vínculos temporales. Wake Lock continúa simulado; equipos Android/iOS reales pendientes.
+- Para repetir únicamente esos recorridos públicos: `E2E_BASE_URL=https://mediumturquoise-elephant-247172.hostingersite.com npx playwright test tests/e2e/10-child-world.spec.ts`. Esta variable evita iniciar un servidor local; no ejecuta la semilla.
+
 ## Hito C: cron y PWA
 
 - La migración `20261017141953_reminders_automations.sql` está aplicada en desarrollo. Se verificaron activos `cofi-process-reminders` y `cofi-dispatch-push` (cada minuto), `cofi-extend-horizons` y `cofi-cleanup-anonymous`.

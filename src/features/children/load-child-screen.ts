@@ -1,4 +1,6 @@
 import "server-only";
+import { childAppearanceSchema } from "./appearance";
+import { unwrap } from "@/lib/errors";
 
 import { listEventsInRange } from "@/features/calendar/queries";
 import { listNotifications } from "@/features/notifications/queries";
@@ -23,7 +25,7 @@ export async function loadChildScreen(
   now: number,
 ) {
   const today = localDateOf(now, family.timezone);
-  const [tasks, events, balances, rewards, redemptions, notifications] = await Promise.all([
+  const [tasks, events, balances, rewards, redemptions, notifications, appearance] = await Promise.all([
     listChildTasks(supabase, family.id, { from: addDays(today, -30), to: today, memberId: member.id }),
     listEventsInRange(supabase, family.id, today, addDays(today, 7)),
     listBalances(supabase, family.id),
@@ -34,8 +36,11 @@ export async function loadChildScreen(
       memberId: member.id,
       limit: 20,
     }),
+    supabase.from("family_members").select("child_accent_color, child_avatar_key")
+      .eq("family_id", family.id).eq("id", member.id).maybeSingle().then(unwrap),
   ]);
   return {
+    appearance: childAppearanceSchema.parse({ accentColor: appearance?.child_accent_color ?? null, avatarKey: appearance?.child_avatar_key ?? null }),
     tasks,
     events: events.filter((e) => visibleToChild(e, member.id)),
     balance: balances.get(member.id) ?? 0,

@@ -216,6 +216,14 @@ Detalle en [diseño](diseno.md).
   - el selector de tema;
   - el celular sin desbordes.
 
+## Mundo del hijo y ajustes de pantalla, 18 oct 2026
+
+- La tuerca abre ajustes propios del vínculo; el acceso adulto queda explícito dentro de ellos. La pantalla infantil tiene Inicio, Tareas, Premios y Ajustes, con navegación superior, URL, recarga e historial.
+- Color personal y avatar SVG se sincronizan entre equipos del hijo y se ven en la vista previa adulta; la identidad familiar de agenda no cambia. Tema, encendido y noche son locales. Wake Lock y Realtime siguen activos entre pestañas.
+- Migración `20261018235417_child_world_appearance` aplicada tras ensayo transaccional: dos campos opcionales y RPC que deduce el hijo del vínculo activo. Nueve migraciones sincronizadas. Tipos regenerados; asesores solo con categorías conocidas.
+- **Verificado:** 55/55 Vitest, 198/198 pgTAP; tipos, lint y builds correctos. Playwright 05/07/10: **13/13**, más **4/4** del mundo infantil contra build compatible. Sin semilla ni reinicio de demostración. La apariencia de las cuentas ficticias se restaura y las pantallas de prueba se revocan.
+- **Publicado:** build `01a1517a-b379-703c-b1a8-bb7266ebd0f6` (19:08 Lima). **4/4** recorridos públicos correctos por HTTPS, sin errores de consola; incluye 320–1440 px y ambos temas. Evidencia en [`verificacion-mundo-hijo.json`](verificacion-mundo-hijo.json). Validación física Android/iOS pendiente.
+
 ## Hitos D y E: IA de texto y voz ⏳ (después del núcleo)
 
 No se implementan hasta validar A, B y C. La aplicación funciona sin claves de IA.

@@ -2,8 +2,10 @@ import { cn } from "cn";
 
 import type { MemberSummary } from "@/features/calendar/types";
 import { readableTextColor } from "@/lib/colors";
+import type { ChildAvatarKey } from "@/features/children/appearance";
+import { ChildAvatarIcon } from "@/features/children/components/child-avatar-icon";
 
-type MemberLike = Pick<MemberSummary, "displayName" | "color" | "initials" | "avatarEmoji">;
+type MemberLike = Pick<MemberSummary, "displayName" | "color" | "initials" | "avatarEmoji"> & { avatarKey?: ChildAvatarKey | null };
 
 export function MemberAvatar({
   member,
@@ -30,7 +32,7 @@ export function MemberAvatar({
       )}
       style={{ backgroundColor: member.color, color: readableTextColor(member.color) }}
     >
-      {member.avatarEmoji ? (
+      {member.avatarKey && member.avatarKey !== "initials" ? <ChildAvatarIcon name={member.avatarKey} /> : member.avatarEmoji ? (
         <span className="text-[1.35em] leading-none">{member.avatarEmoji}</span>
       ) : (
         member.initials

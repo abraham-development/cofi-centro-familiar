@@ -82,6 +82,10 @@ Migraciones en `supabase/migrations/` (aplicadas en orden):
 - **Racha de hábitos.** Un día exento **pausa** la racha, no la rompe. Hoy pendiente tampoco la rompe.
 - **Canjes.** Se descuentan al **aprobar**, verificando el saldo bajo bloqueo. Cancelar uno ya cobrado reembolsa una sola vez.
 
+## Apariencia del mundo infantil
+
+La apariencia infantil se guarda en los campos opcionales `family_members.child_accent_color` y `child_avatar_key` (migración `20261018235417`). No reemplazan `color` ni `avatar_emoji` de la identidad familiar. `save_child_appearance` deduce el perfil del vínculo infantil activo, comprueba que no esté archivado y solo modifica esos dos campos. Las sesiones no tienen UPDATE directo sobre ellos. Al dejarlos nulos se recupera la apariencia familiar.
+
 ## Trabajos programados (pg_cron)
 
 | Job | Cuándo (UTC) | Qué hace |

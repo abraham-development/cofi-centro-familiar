@@ -29,7 +29,7 @@ test("PWA instalable: copia autorizada, recarga sin conexión y caché exclusiva
   await expect(page.getByText("Última sincronización:")).toBeVisible();
   await expect(page.locator("#week")).toContainText(copy.events[0].title);
   await expect(page.getByRole("button")).toHaveCount(0);
-  await page.screenshot({ path: "docs/capturas/pwa-sin-conexion.png", fullPage: true });
+  await page.screenshot({ path: "/tmp/cofi-pwa-sin-conexion.png", fullPage: true });
   await context.setOffline(false);
   await expect(page).toHaveURL(/\/casa$/);
   await expect(page.getByRole("heading", { name: "Pendientes de hoy" })).toBeVisible();
@@ -132,6 +132,7 @@ test("una pantalla infantil guarda solo su alcance, recupera Wake Lock y limpia 
     // Family-visible events may mention other members; adult-only items never enter the copy.
     expect(serialized).not.toMatch(/Reunión de padres|Pagar el internet/);
 
+    await screen.getByRole("link", { name: "Ajustes de mi pantalla", exact: true }).click();
     await screen.getByRole("button", { name: "Mantener pantalla encendida" }).click();
     await expect(screen.getByText("Pantalla encendida", { exact: true })).toBeVisible();
     await screen.evaluate(async () => {
